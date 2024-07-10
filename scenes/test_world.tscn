@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://p82bau8p5oy0"]
+
+[ext_resource type="PackedScene" uid="uid://6lu8fikb4kl2" path="res://scenes/player.tscn" id="1_1ykfb"]
+[ext_resource type="Texture2D" uid="uid://yina8qjbo3my" path="res://assets/sprites/tileset.png" id="2_f15i2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o3trd"]
+texture = ExtResource("2_f15i2")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[sub_resource type="TileSet" id="TileSet_na7fl"]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+sources/1 = SubResource("TileSetAtlasSource_o3trd")
+
+[node name="Test World" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_1ykfb")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_na7fl")
+format = 2
+layer_0/tile_data = PackedInt32Array(196605, 1, 0, 196606, 1, 0, 196607, 1, 0, 131072, 1, 0, 131073, 1, 0, 131074, 1, 0, 131075, 1, 0, 131076, 1, 0, 131077, 1, 0, 131078, 1, 0, 131079, 1, 0, 131080, 1, 0, 131081, 1, 0, 131082, 1, 0, 131083, 1, 0, 196604, 1, 0, 196603, 1, 0, 196602, 1, 0, 196601, 1, 0, 196600, 1, 0, 196599, 1, 0, 196598, 1, 0, 196597, 1, 0, 65542, 1, 0, 6, 1, 0, -65530, 1, 0, -131066, 1, 0, -196602, 1, 0, -262138, 1, 0, -327674, 1, 0)
