@@ -315,16 +315,16 @@ offset = Vector2(3.5, 14.5)
 sprite_frames = SubResource("SpriteFrames_yje5t")
 animation = &"chasis2"
 
-[node name="GunSprite" type="AnimatedSprite2D" parent="."]
+[node name="GunSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
 position = Vector2(-9.5, -1.5)
 sprite_frames = SubResource("SpriteFrames_16k8k")
 animation = &"shoot"
 offset = Vector2(11.5, 3.5)
 
-[node name="GunTip" type="Marker2D" parent="GunSprite"]
+[node name="GunTip" type="Marker2D" parent="ChasisSprite/GunSprite"]
 position = Vector2(26.5, 7)
 
-[node name="ChargeSprite" type="AnimatedSprite2D" parent="."]
+[node name="ChargeSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
 visible = false
 position = Vector2(-9.5, -1.5)
 sprite_frames = SubResource("SpriteFrames_uui1x")
@@ -333,30 +333,30 @@ frame = 3
 frame_progress = 1.0
 offset = Vector2(11.5, 4.5)
 
-[node name="ChargeTip" type="Marker2D" parent="ChargeSprite"]
+[node name="ChargeTip" type="Marker2D" parent="ChasisSprite/ChargeSprite"]
 position = Vector2(24, 7)
 
-[node name="BallSprite" type="Sprite2D" parent="ChargeSprite"]
+[node name="BallSprite" type="Sprite2D" parent="ChasisSprite/ChargeSprite"]
 visible = false
 z_index = 2
 z_as_relative = false
 position = Vector2(24, 7)
 texture = ExtResource("6_dpy0p")
 
-[node name="ThrowerSprite" type="AnimatedSprite2D" parent="."]
+[node name="ThrowerSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
 visible = false
 position = Vector2(-9.5, -1.5)
 sprite_frames = SubResource("SpriteFrames_a0yso")
 animation = &"shoot"
 offset = Vector2(11.5, 3.5)
 
-[node name="ThrowerTip" type="Marker2D" parent="ThrowerSprite"]
+[node name="ThrowerTip" type="Marker2D" parent="ChasisSprite/ThrowerSprite"]
 position = Vector2(26.5, 7)
 
-[node name="Fire" type="Area2D" parent="ThrowerSprite"]
+[node name="Fire" type="Area2D" parent="ChasisSprite/ThrowerSprite"]
 position = Vector2(26.5, 7)
 
-[node name="FireSprite" type="AnimatedSprite2D" parent="ThrowerSprite/Fire"]
+[node name="FireSprite" type="AnimatedSprite2D" parent="ChasisSprite/ThrowerSprite/Fire"]
 visible = false
 z_index = 2
 z_as_relative = false
@@ -365,12 +365,12 @@ animation = &"fire"
 autoplay = "fire"
 offset = Vector2(48, 1.5)
 
-[node name="FireCollision" type="CollisionShape2D" parent="ThrowerSprite/Fire"]
+[node name="FireCollision" type="CollisionShape2D" parent="ChasisSprite/ThrowerSprite/Fire"]
 position = Vector2(48, 0)
 shape = SubResource("RectangleShape2D_nv2gw")
 disabled = true
 
-[node name="FireRayCast" type="RayCast2D" parent="ThrowerSprite/Fire"]
+[node name="FireRayCast" type="RayCast2D" parent="ChasisSprite/ThrowerSprite/Fire"]
 target_position = Vector2(96, 0)
 hit_from_inside = true
 

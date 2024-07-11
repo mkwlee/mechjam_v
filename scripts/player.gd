@@ -5,19 +5,20 @@ extends CharacterBody2D
 @onready var chasis_sprite = $ChasisSprite
 @onready var front_leg_sprite = $FrontLegSprite
 
-@onready var gun_sprite = $GunSprite
-@onready var gun_tip = $GunSprite/GunTip
+@onready var gun_sprite = $ChasisSprite/GunSprite
+@onready var gun_tip = $ChasisSprite/GunSprite/GunTip
 
-@onready var charge_sprite = $ChargeSprite
-@onready var charge_tip = $ChargeSprite/ChargeTip
-@onready var ball_sprite = $ChargeSprite/BallSprite
 
-@onready var thrower_sprite = $ThrowerSprite
-@onready var thrower_tip = $ThrowerSprite/ThrowerTip
-@onready var fire_sprite = $ThrowerSprite/Fire/FireSprite
-@onready var fire_collision = $ThrowerSprite/Fire/FireCollision
-@onready var fire_ray_cast = $ThrowerSprite/Fire/FireRayCast
+@onready var charge_sprite = $ChasisSprite/ChargeSprite
+@onready var charge_tip = $ChasisSprite/ChargeSprite/ChargeTip
+@onready var ball_sprite = $ChasisSprite/ChargeSprite/BallSprite
 
+
+@onready var thrower_sprite = $ChasisSprite/ThrowerSprite
+@onready var thrower_tip = $ChasisSprite/ThrowerSprite/ThrowerTip
+@onready var fire_sprite = $ChasisSprite/ThrowerSprite/Fire/FireSprite
+@onready var fire_collision = $ChasisSprite/ThrowerSprite/Fire/FireCollision
+@onready var fire_ray_cast = $ChasisSprite/ThrowerSprite/Fire/FireRayCast
 
 @onready var arms = [[gun_sprite, gun_tip], [charge_sprite, charge_tip], [thrower_sprite, thrower_tip]]
 
