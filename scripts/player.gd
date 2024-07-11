@@ -10,13 +10,21 @@ extends CharacterBody2D
 
 @onready var charge_sprite = $ChargeSprite
 @onready var charge_tip = $ChargeSprite/ChargeTip
-@onready var ball_charging = $ChargeSprite/BallCharging
+@onready var ball_sprite = $ChargeSprite/BallSprite
 
-@onready var arms = [[gun_sprite, gun_tip], [charge_sprite, charge_tip]]
+@onready var thrower_sprite = $ThrowerSprite
+@onready var thrower_tip = $ThrowerSprite/ThrowerTip
+@onready var fire_sprite = $ThrowerSprite/Fire/FireSprite
+@onready var fire_collision = $ThrowerSprite/Fire/FireCollision
+@onready var fire_ray_cast = $ThrowerSprite/Fire/FireRayCast
+
+
+@onready var arms = [[gun_sprite, gun_tip], [charge_sprite, charge_tip], [thrower_sprite, thrower_tip]]
 
 #Scene references
 const BULLET = preload("res://scenes/bullet.tscn")
 const BALL = preload("res://scenes/ball.tscn")
+const FIRE = preload("res://scenes/fire.tscn")
 
 @export var SPEED : int
 @export var JUMP : int
@@ -41,10 +49,7 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
-	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = -JUMP
-
+	
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction = Input.get_axis("left", "right")
@@ -55,14 +60,22 @@ func _physics_process(delta):
 			flipped_player(true)
 			
 		velocity.x = direction * SPEED
-		back_leg_sprite.play("walk")
-		front_leg_sprite.play("walk")
+		if is_on_floor():
+			back_leg_sprite.play("walk")
+			front_leg_sprite.play("walk")
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		back_leg_sprite.play("idle")
-		front_leg_sprite.play("idle")
+		if is_on_floor():
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+			back_leg_sprite.play("idle")
+			front_leg_sprite.play("idle")
 		
-	
+	# Handle jump.
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = -JUMP
+		back_leg_sprite.play("jump")
+		front_leg_sprite.play("jump")
+		
+
 
 	move_and_slide()
 	rotate_arm_up()
@@ -85,6 +98,12 @@ func flipped_player(state):
 		a[0].position.x *= -1
 		a[0].offset.x *= -1
 		a[1].position.x *= -1
+	
+	fire_sprite.flip_h = state
+	fire_sprite.position.x *= -1
+	fire_sprite.offset.x *= -1
+	
+	fire_ray_cast.target_position.x *= -1
 	
 	front_leg_sprite.flip_h = state
 	front_leg_sprite.position.x *= -1
@@ -121,19 +140,20 @@ func shoot_gun():
 					get_parent().add_child(b)
 					gun_sprite.play("shoot")
 					gun_cool_down.start()
-					pass
+			pass
 		1: #Charge
-			if Input.is_action_just_pressed("shoot"):
-				ball_charging.position = charge_tip.position
-				ball_charging.scale = Vector2(0.5, 0.5)
-				ball_charging.show()
+			if Input.is_action_just_pressed("shoot"): #Start of charge
+				ball_sprite.position = charge_tip.position
+				ball_sprite.scale = Vector2(0.5, 0.5)
+				ball_sprite.show()
 				charge_power_up.start()
-			elif Input.is_action_pressed("shoot"):
-				ball_charging.position = charge_tip.position
+			elif Input.is_action_pressed("shoot"): #During charge
+				ball_sprite.position = charge_tip.position
 				var time_held = floor(CHARGE_POWERUP - charge_power_up.time_left)
-				ball_charging.scale = Vector2(0.5+0.25*time_held, 0.5+0.25*time_held)
-			elif Input.is_action_just_released("shoot"):
-				if ball_charging.visible == true:
+				ball_sprite.scale = Vector2(0.5+0.25*time_held, 0.5+0.25*time_held)
+				ball_sprite.rotate(PI/2)
+			elif Input.is_action_just_released("shoot"): #Release charge
+				if ball_sprite.visible == true:
 					var time_held = floor(CHARGE_POWERUP - charge_power_up.time_left)
 					var b = BALL.instantiate()
 					b.rotation = charge_tip.global_rotation
@@ -142,11 +162,33 @@ func shoot_gun():
 					b.position = charge_tip.global_position
 					b.speed_multiplier = time_held+1
 					b.size = Vector2(0.5+0.25*time_held, 0.5+0.25*time_held)
-					ball_charging.hide()
+					ball_sprite.hide()
 					get_parent().add_child(b)
 					charge_sprite.play("shoot")
+			pass
+		2: #Thrower
+			if Input.is_action_pressed("shoot"):
+				fire_sprite.global_rotation = thrower_tip.global_rotation
+				fire_ray_cast.global_rotation = thrower_tip.global_rotation
+				fire_sprite.global_position = thrower_tip.global_position
+				fire_ray_cast.global_position = thrower_tip.global_position
 				
+				fire_collision.disabled = false
+				fire_ray_cast.enabled = true
+				if fire_ray_cast.is_colliding():
+					var ray_size = thrower_tip.global_position.distance_to(fire_ray_cast.get_collision_point())
+					print(ray_size/96)
+					fire_sprite.scale.x = ray_size/96
+				else:
+					fire_sprite.scale.x = 1
 				
+				fire_sprite.show()
+				fire_sprite.play("fire")
+			else:
+				fire_collision.disabled = true
+				fire_ray_cast.enabled = false
+				fire_sprite.scale.x = 1
+				fire_sprite.hide()
 			
 	
 func set_timers():
@@ -156,15 +198,14 @@ func set_timers():
 	charge_power_up.one_shot = true
 
 func switch_arm():
-	if current_arm == 0:
-		arms[0][0].hide()
-		arms[1][0].show()
-		arms[1][1].show()
-		current_arm = 1
-	else:
-		arms[1][0].hide()
-		arms[1][1].hide()
-		arms[0][0].show()
-		arms[0][1].show()
+	if current_arm == 2:
 		current_arm = 0
+	else:
+		current_arm += 1
 		
+	for a in 3:
+		if a == current_arm:
+			arms[a][0].show()
+			arms[a][1].show()
+		else:
+			arms[a][0].hide()

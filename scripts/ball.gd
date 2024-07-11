@@ -11,6 +11,7 @@ var size
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	set_continuous_collision_detection_mode(CCD_MODE_CAST_RAY)
 	contact_monitor = true
 	max_contacts_reported = 1
 	sprite.scale = size

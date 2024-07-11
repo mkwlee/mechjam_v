@@ -7,6 +7,7 @@
 size = Vector2(4, 3)
 
 [node name="Bullet" type="RigidBody2D"]
+z_index = 2
 collision_layer = 4
 gravity_scale = 0.0
 script = ExtResource("1_bcfam")

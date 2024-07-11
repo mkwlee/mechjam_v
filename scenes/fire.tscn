@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://rfbyft7n22d3"]
+
+[ext_resource type="Texture2D" uid="uid://b7ust0b4spb51" path="res://assets/sprites/fire.png" id="1_k43vv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bco05"]
+atlas = ExtResource("1_k43vv")
+region = Rect2(0, 0, 96, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_df1jt"]
+atlas = ExtResource("1_k43vv")
+region = Rect2(96, 0, 96, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f6smf"]
+atlas = ExtResource("1_k43vv")
+region = Rect2(192, 0, 96, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kjgq3"]
+atlas = ExtResource("1_k43vv")
+region = Rect2(288, 0, 96, 28)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t85l6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bco05")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_df1jt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f6smf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kjgq3")
+}],
+"loop": true,
+"name": &"fire",
+"speed": 9.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sevwf"]
+size = Vector2(96, 32)
+
+[node name="Fire" type="Area2D"]
+
+[node name="FireSprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_t85l6")
+animation = &"fire"
+autoplay = "fire"
+frame_progress = 0.679597
+offset = Vector2(48, 1.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(48, 0)
+shape = SubResource("RectangleShape2D_sevwf")
