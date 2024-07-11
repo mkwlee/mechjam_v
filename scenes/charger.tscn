@@ -1,0 +1,85 @@
+[gd_scene load_steps=13 format=3 uid="uid://cx13sky8kswwi"]
+
+[ext_resource type="Texture2D" uid="uid://cob8u6kp3epyp" path="res://assets/sprites/charger/charger_chasis.png" id="1_n7ts8"]
+[ext_resource type="Texture2D" uid="uid://b5eana0kmsxm7" path="res://assets/sprites/charger/charger_fire.png" id="2_xyd3w"]
+[ext_resource type="Texture2D" uid="uid://du3hkekb04dtl" path="res://assets/sprites/charger/charger_spike.png" id="3_ah51i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l2yow"]
+atlas = ExtResource("1_n7ts8")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_302cg"]
+atlas = ExtResource("1_n7ts8")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_puudn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l2yow")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_302cg")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8g7ac"]
+atlas = ExtResource("2_xyd3w")
+region = Rect2(0, 0, 16, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hfjmg"]
+atlas = ExtResource("2_xyd3w")
+region = Rect2(16, 0, 16, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e8bal"]
+atlas = ExtResource("2_xyd3w")
+region = Rect2(32, 0, 16, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ora2r"]
+atlas = ExtResource("2_xyd3w")
+region = Rect2(48, 0, 16, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5kkcb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8g7ac")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hfjmg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e8bal")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ora2r")
+}],
+"loop": true,
+"name": &"default",
+"speed": 9.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i5xcc"]
+size = Vector2(32, 29)
+
+[node name="Charger" type="RigidBody2D"]
+
+[node name="ChasisSprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_puudn")
+
+[node name="FireSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(-24, 0)
+sprite_frames = SubResource("SpriteFrames_5kkcb")
+autoplay = "default"
+
+[node name="SpikeSprite" type="Sprite2D" parent="."]
+position = Vector2(23.5, 7)
+texture = ExtResource("3_ah51i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.5, 0)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_i5xcc")
