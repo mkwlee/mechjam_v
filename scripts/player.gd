@@ -168,11 +168,6 @@ func shoot_gun():
 			pass
 		2: #Thrower
 			if Input.is_action_pressed("shoot"):
-				fire_sprite.global_rotation = thrower_tip.global_rotation
-				fire_ray_cast.global_rotation = thrower_tip.global_rotation
-				fire_sprite.global_position = thrower_tip.global_position
-				fire_ray_cast.global_position = thrower_tip.global_position
-				
 				fire_collision.disabled = false
 				fire_ray_cast.enabled = true
 				if fire_ray_cast.is_colliding():
@@ -182,6 +177,11 @@ func shoot_gun():
 				else:
 					fire_sprite.scale.x = 1
 				
+				fire_sprite.global_rotation = thrower_tip.global_rotation
+				fire_ray_cast.global_rotation = thrower_tip.global_rotation
+				fire_sprite.global_position = thrower_tip.global_position
+				fire_ray_cast.global_position = thrower_tip.global_position
+
 				fire_sprite.show()
 				fire_sprite.play("fire")
 			else:

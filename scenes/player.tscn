@@ -1,8 +1,9 @@
-[gd_scene load_steps=44 format=3 uid="uid://6lu8fikb4kl2"]
+[gd_scene load_steps=46 format=3 uid="uid://6lu8fikb4kl2"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_nlx6r"]
 [ext_resource type="Texture2D" uid="uid://dl2plghi0koa5" path="res://assets/sprites/chasis.png" id="1_t5hw6"]
 [ext_resource type="Texture2D" uid="uid://cu6446oko8yy" path="res://assets/sprites/gun.png" id="2_njt20"]
+[ext_resource type="Texture2D" uid="uid://dhwlr2pl4avv0" path="res://assets/sprites/chasis2.png" id="3_ky8tx"]
 [ext_resource type="Texture2D" uid="uid://bqavmlhic27f0" path="res://assets/sprites/leg.png" id="3_rw7xu"]
 [ext_resource type="Texture2D" uid="uid://dscikkoyoss7h" path="res://assets/sprites/charge.png" id="5_3h1ym"]
 [ext_resource type="Texture2D" uid="uid://nv2uhtlg8tg2" path="res://assets/sprites/ball.png" id="6_dpy0p"]
@@ -52,7 +53,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"jump",
-"speed": 3.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -72,13 +73,25 @@ animations = [{
 "speed": 8.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_kq3ua"]
+atlas = ExtResource("3_ky8tx")
+region = Rect2(0, 0, 32, 32)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_yje5t"]
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_kq3ua")
+}],
+"loop": false,
+"name": &"chasis2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("1_t5hw6")
 }],
-"loop": true,
+"loop": false,
 "name": &"idle",
 "speed": 5.0
 }]
@@ -256,7 +269,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"jump",
-"speed": 3.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -277,12 +290,14 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qyyyd"]
-radius = 13.0
-height = 64.0
+radius = 17.0
+height = 58.0
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 3
 collision_layer = 2
+floor_stop_on_slope = false
+floor_block_on_wall = false
 script = ExtResource("1_nlx6r")
 SPEED = 150
 JUMP = 400
@@ -290,7 +305,7 @@ GUN_COOLDOWN = 0.5
 CHARGE_POWERUP = 2.0
 
 [node name="BackLegSprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(-0.5, 12.5)
+position = Vector2(-4.5, 10.5)
 sprite_frames = SubResource("SpriteFrames_omj2c")
 animation = &"jump"
 autoplay = "idle"
@@ -298,11 +313,10 @@ offset = Vector2(3.5, 14.5)
 
 [node name="ChasisSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_yje5t")
-animation = &"idle"
+animation = &"chasis2"
 
 [node name="GunSprite" type="AnimatedSprite2D" parent="."]
-visible = false
-position = Vector2(-7.5, -1.5)
+position = Vector2(-9.5, -1.5)
 sprite_frames = SubResource("SpriteFrames_16k8k")
 animation = &"shoot"
 offset = Vector2(11.5, 3.5)
@@ -312,7 +326,7 @@ position = Vector2(26.5, 7)
 
 [node name="ChargeSprite" type="AnimatedSprite2D" parent="."]
 visible = false
-position = Vector2(-7.5, -1.5)
+position = Vector2(-9.5, -1.5)
 sprite_frames = SubResource("SpriteFrames_uui1x")
 animation = &"shoot"
 frame = 3
@@ -330,7 +344,8 @@ position = Vector2(24, 7)
 texture = ExtResource("6_dpy0p")
 
 [node name="ThrowerSprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(-7.5, -1.5)
+visible = false
+position = Vector2(-9.5, -1.5)
 sprite_frames = SubResource("SpriteFrames_a0yso")
 animation = &"shoot"
 offset = Vector2(11.5, 3.5)
@@ -360,17 +375,14 @@ target_position = Vector2(96, 0)
 hit_from_inside = true
 
 [node name="FrontLegSprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(-0.5, 12.5)
+position = Vector2(-4.5, 10.5)
 sprite_frames = SubResource("SpriteFrames_12m68")
 animation = &"jump"
 autoplay = "idle"
-frame = 1
-frame_progress = 1.0
 offset = Vector2(3.5, 14.5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2(0, 13)
+position = Vector2(0, 14)
 shape = SubResource("CapsuleShape2D_qyyyd")
 
 [node name="Timers" type="Node" parent="."]
