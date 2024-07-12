@@ -1,6 +1,8 @@
 extends RigidBody2D
 
 @export var SPEED : int
+@export var DAMAGE : int
+
 var direction = 1
 
 # Called when the node enters the scene tree for the first time.
@@ -18,7 +20,8 @@ func _process(delta):
 
 
 func _on_body_entered(body):
-	queue_free()
+	if body.name == "TileMap":
+		queue_free()
 
 
 func _on_visible_on_screen_notifier_2d_screen_exited():

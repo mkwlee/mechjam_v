@@ -67,6 +67,7 @@ switch_arm={
 2d_physics/layer_3="Player Projectiles"
 2d_physics/layer_4="Enemies"
 2d_physics/layer_5="Enemy Projectiles"
+2d_physics/layer_6="Layer 6"
 
 [rendering]
 

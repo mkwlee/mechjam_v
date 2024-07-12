@@ -161,6 +161,7 @@ func shoot_gun():
 					if chasis_sprite.flip_h == true:
 							b.direction = -1
 					b.position = charge_tip.global_position
+					b.damage_multiplier = pow(10, time_held)
 					b.speed_multiplier = time_held+1
 					b.size = Vector2(0.5+0.25*time_held, 0.5+0.25*time_held)
 					ball_sprite.hide()
