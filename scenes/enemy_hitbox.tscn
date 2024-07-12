@@ -9,7 +9,7 @@ script = ExtResource("1_3nme0")
 STAGGER_THRESHOLD = 50
 
 [node name="ImpactTimer" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.1
 one_shot = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -16,9 +16,9 @@ extends CharacterBody2D
 
 @onready var thrower_sprite = $ChasisSprite/ThrowerSprite
 @onready var thrower_tip = $ChasisSprite/ThrowerSprite/ThrowerTip
-@onready var fire_sprite = $ChasisSprite/ThrowerSprite/Fire/FireSprite
-@onready var fire_collision = $ChasisSprite/ThrowerSprite/Fire/FireCollision
-@onready var fire_ray_cast = $ChasisSprite/ThrowerSprite/Fire/FireRayCast
+@onready var fire_sprite = $ChasisSprite/ThrowerSprite/FireSprite
+@onready var fire_ray_cast = $ChasisSprite/ThrowerSprite/FireRayCast
+
 
 @onready var arms = [[gun_sprite, gun_tip], [charge_sprite, charge_tip], [thrower_sprite, thrower_tip]]
 
@@ -170,7 +170,7 @@ func shoot_gun():
 			pass
 		2: #Thrower
 			if Input.is_action_pressed("shoot"):
-				fire_collision.disabled = false
+				#fire_collision.disabled = false
 				fire_ray_cast.enabled = true
 				if fire_ray_cast.is_colliding():
 					var ray_size = thrower_tip.global_position.distance_to(fire_ray_cast.get_collision_point())
@@ -187,7 +187,7 @@ func shoot_gun():
 				fire_sprite.show()
 				fire_sprite.play("fire")
 			else:
-				fire_collision.disabled = true
+				#fire_collision.disabled = true
 				fire_ray_cast.enabled = false
 				fire_sprite.scale.x = 1
 				fire_sprite.hide()
