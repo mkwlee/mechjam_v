@@ -24,8 +24,7 @@ extends RigidBody2D
 @onready var cool_down = $CoolDown
 
 #Scene Const
-const DROPPER_PROJECTILE = preload("res://scenes/dropper_projectile.tscn")
-
+const SCRAPS = preload("res://scenes/scraps.tscn")
 #Var
 var direction = 1
 enum actions {WANDER, PREPARING, FOLLOWING, COOLDOWN}
@@ -46,7 +45,7 @@ func _process(delta):
 	if not STAGGER:
 		match state:
 			actions.WANDER:
-				if linear_velocity.x == 0:
+				if  linear_velocity.x == 0 or movement_stop_ray.is_colliding():
 					direction *= -1
 					chasis_sprite.scale.x *= -1
 					linear_velocity.x = direction * SPEED
@@ -68,7 +67,7 @@ func _process(delta):
 				#if direction == 1 and position.x > target_location.x or direction == -1 and position.x < target_location.x:
 					#linear_velocity.x = move_toward(linear_velocity.x, 0, (SPEED*2)*delta)
 					
-				if linear_velocity.x == 0:
+				if  linear_velocity.x == 0 or movement_stop_ray.is_colliding():
 					enter_cooldown()
 					cool_down.start()
 				pass
@@ -99,6 +98,7 @@ func enter_wander():
 	linear_velocity.x = direction * SPEED
 	for leg in legs.get_children():
 		leg.play()
+	chasis_sprite.play("default")
 	state = actions.WANDER
 
 func enter_preparing():
@@ -107,20 +107,20 @@ func enter_preparing():
 	mouth_sprite.play("default")
 	for leg in legs.get_children():
 		leg.pause()
-	
+	chasis_sprite.play("attack")
 	state = actions.PREPARING
 
-func enter_following():
+func enter_following(inital):
 	for leg in legs.get_children():
 		leg.play("default")
-	
-	target_location = player.global_position
-	if target_location.x > global_position.x:
-		direction = 1
-		chasis_sprite.scale.x = 1
-	elif target_location.x < global_position.x:
-		direction = -1
-		chasis_sprite.scale.x = -1
+	if inital:
+		target_location = player.global_position
+		if target_location.x > global_position.x:
+			direction = 1
+			chasis_sprite.scale.x = 1
+		elif target_location.x < global_position.x:
+			direction = -1
+			chasis_sprite.scale.x = -1
 	linear_velocity.x = direction * SPEED * 2
 	
 	
@@ -138,9 +138,9 @@ func open_mouth():
 	mouth_sprite.play("default")
 
 func drop_projectile():
-	var p = DROPPER_PROJECTILE.instantiate()
-	p.global_position = drop_point.global_position
-	get_parent().add_child(p)
+	var s = SCRAPS.instantiate()
+	s.global_position = drop_point.global_position
+	get_parent().add_child(s)
 
 func exit_stagger():
 	match state:
@@ -153,7 +153,7 @@ func exit_stagger():
 			follow_delay.paused = false
 			pass
 		actions.FOLLOWING:
-			enter_following()
+			enter_following(false)
 			follow_drop.paused = false
 			pass
 		actions.COOLDOWN:

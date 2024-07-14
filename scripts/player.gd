@@ -214,10 +214,12 @@ func switch_arm():
 
 func take_damage(damage_ammount):
 	if damage_immunity.is_stopped():
+		modulate = Color.RED
 		HEALTH -= damage_ammount
 		health_bar.value = max(0, HEALTH)
 		health_bar.get_child(0).value = 100 - HEALTH
 		damage_immunity.start()
 		
 func _on_damage_immunity_timeout():
+	modulate = Color.WHITE
 	health_bar.get_child(0).value = 0

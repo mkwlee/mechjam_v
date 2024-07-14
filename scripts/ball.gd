@@ -32,8 +32,7 @@ func _process(delta):
 	sprite.rotate(PI/2)
 	
 func _on_body_entered(body):
-	if body.name == "TileMap":
-		queue_free()
+	queue_free()
 
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	queue_free()

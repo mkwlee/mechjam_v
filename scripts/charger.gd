@@ -11,7 +11,7 @@ extends RigidBody2D
 @onready var charge_delay = $ChargeDelay
 @onready var cool_down = $CoolDown
 
-@onready var spike_collision = $"ChasisSprite/Spike Collision"
+@onready var spike = $ChasisSprite/Spike
 
 
 @export var SPEED : int
@@ -43,7 +43,7 @@ func _process(delta):
 	if not STAGGER:
 		match state:
 			actions.WANDER:
-				if linear_velocity.x == 0:
+				if linear_velocity.x == 0 or movement_stop_ray.is_colliding():
 					direction *= -1
 					chasis_sprite.scale.x *= -1
 					linear_velocity.x = direction * SPEED
@@ -60,7 +60,7 @@ func _process(delta):
 					#fire_sprite.play("default")
 					#linear_velocity.x = move_toward(linear_velocity.x, 0, (SPEED*2)*delta)
 					
-				if linear_velocity.x == 0:
+				if linear_velocity.x == 0 or movement_stop_ray.is_colliding():
 					enter_cooldown()
 					cool_down.start()
 					
@@ -78,7 +78,7 @@ func _process(delta):
 			
 func enter_wander():
 	linear_velocity.x = direction * SPEED
-	spike_collision.ACTIVE = false
+	spike.ACTIVE = false
 	chasis_sprite.play("default")
 	fire_sprite.play("default")
 	fire_sprite.show()
@@ -94,7 +94,7 @@ func enter_preparing():
 
 func enter_charging():
 	linear_velocity.x = direction * SPEED * 2
-	spike_collision.ACTIVE = true
+	spike.ACTIVE = true
 	fire_sprite.play("charging")
 	fire_sprite.show()
 	state = actions.CHARGING

@@ -35,7 +35,7 @@ func _on_body_entered(body):
 			dead = true
 			
 		impact_timer.start()
-		body.queue_free()
+		#body.queue_free()
 
 func damage_and_stagger(health, damage):
 	SPRITE.modulate = Color.RED

@@ -1,0 +1,164 @@
+[gd_scene load_steps=18 format=3 uid="uid://cy8dq4s8turyf"]
+
+[ext_resource type="Script" path="res://scripts/exploder.gd" id="1_87a8b"]
+[ext_resource type="Texture2D" uid="uid://cban4cp8heerp" path="res://assets/sprites/exploder/exploder_chasis.png" id="1_geaho"]
+[ext_resource type="PackedScene" uid="uid://c143x75y0fkh2" path="res://scenes/enemy_hitbox.tscn" id="2_nke54"]
+[ext_resource type="Texture2D" uid="uid://b1plcs35vpcm1" path="res://assets/sprites/exploder/exploder_fire.png" id="3_nm0c5"]
+[ext_resource type="Texture2D" uid="uid://be2d3cmefxa72" path="res://assets/sprites/exploder/exploder_explosion.png" id="4_sqwdr"]
+[ext_resource type="PackedScene" uid="uid://c6fcqep6ex77e" path="res://scenes/enemy_hurtbox.tscn" id="6_j0mhk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4jatr"]
+atlas = ExtResource("1_geaho")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iyagg"]
+atlas = ExtResource("1_geaho")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j7rhe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4jatr")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iyagg")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xsrk1"]
+atlas = ExtResource("3_nm0c5")
+region = Rect2(0, 0, 16, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8h8fr"]
+atlas = ExtResource("3_nm0c5")
+region = Rect2(16, 0, 16, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xtjcg"]
+atlas = ExtResource("3_nm0c5")
+region = Rect2(32, 0, 16, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xhjsu"]
+atlas = ExtResource("3_nm0c5")
+region = Rect2(48, 0, 16, 6)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_18naa"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xsrk1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8h8fr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xtjcg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xhjsu")
+}],
+"loop": true,
+"name": &"default",
+"speed": 9.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_feynj"]
+size = Vector2(15, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i2f4d"]
+size = Vector2(17, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o885w"]
+size = Vector2(96, 96)
+
+[node name="Exploder" type="RigidBody2D"]
+z_index = 1
+collision_layer = 8
+gravity_scale = 0.0
+lock_rotation = true
+script = ExtResource("1_87a8b")
+SPEED = 50
+HEALTH = 200
+
+[node name="ChasisSprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_j7rhe")
+autoplay = "default"
+
+[node name="FireSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
+visible = false
+position = Vector2(-16, 0)
+sprite_frames = SubResource("SpriteFrames_18naa")
+autoplay = "default"
+
+[node name="EnemyDetectionRay" type="RayCast2D" parent="ChasisSprite"]
+exclude_parent = false
+target_position = Vector2(640, 0)
+collision_mask = 3
+hit_from_inside = true
+
+[node name="Explosion" type="Node2D" parent="ChasisSprite"]
+
+[node name="Red" type="Sprite2D" parent="ChasisSprite/Explosion"]
+visible = false
+texture = ExtResource("4_sqwdr")
+hframes = 4
+
+[node name="Orange" type="Sprite2D" parent="ChasisSprite/Explosion"]
+visible = false
+texture = ExtResource("4_sqwdr")
+hframes = 4
+frame = 1
+
+[node name="Yellow" type="Sprite2D" parent="ChasisSprite/Explosion"]
+visible = false
+texture = ExtResource("4_sqwdr")
+hframes = 4
+frame = 2
+
+[node name="White" type="Sprite2D" parent="ChasisSprite/Explosion"]
+visible = false
+texture = ExtResource("4_sqwdr")
+hframes = 4
+frame = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_feynj")
+
+[node name="Enemy Hitbox" parent="." node_paths=PackedStringArray("ENEMY", "SPRITE") instance=ExtResource("2_nke54")]
+visible = false
+ENEMY = NodePath("..")
+SPRITE = NodePath("../ChasisSprite")
+STAGGER = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy Hitbox"]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_i2f4d")
+debug_color = Color(0.0587249, 0.649918, 0, 0.42)
+
+[node name="ChaseDelay" type="Timer" parent="."]
+one_shot = true
+
+[node name="ExplosionSpread" type="Timer" parent="."]
+wait_time = 0.05
+
+[node name="Enemy Hurtbox" parent="." node_paths=PackedStringArray("ENEMY") instance=ExtResource("6_j0mhk")]
+ENEMY = NodePath("..")
+DAMAGE = 50
+ACTIVE = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy Hurtbox"]
+shape = SubResource("RectangleShape2D_o885w")
+debug_color = Color(1, 0.0144794, 0.00058604, 0.42)
+
+[connection signal="timeout" from="ChaseDelay" to="." method="enter_chasing"]
+[connection signal="timeout" from="ExplosionSpread" to="." method="animated_explosion"]

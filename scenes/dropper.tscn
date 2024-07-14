@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://buhew7wlngerc"]
+[gd_scene load_steps=44 format=3 uid="uid://buhew7wlngerc"]
 
 [ext_resource type="Texture2D" uid="uid://b2amch251cyw3" path="res://assets/sprites/dropper/dropper_chasis.png" id="1_3dhpc"]
 [ext_resource type="Script" path="res://scripts/dropper.gd" id="1_ck4ei"]
@@ -6,7 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://dmll0et7acbs4" path="res://assets/sprites/dropper/dropper_leg.png" id="3_cpgbl"]
 [ext_resource type="PackedScene" uid="uid://c143x75y0fkh2" path="res://scenes/enemy_hitbox.tscn" id="5_sggrk"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_38wce"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_2itij"]
+atlas = ExtResource("1_3dhpc")
+region = Rect2(64, 0, 64, 29)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_opwus"]
 atlas = ExtResource("1_3dhpc")
 region = Rect2(0, 0, 64, 29)
 
@@ -14,7 +18,15 @@ region = Rect2(0, 0, 64, 29)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_38wce")
+"texture": SubResource("AtlasTexture_2itij")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_opwus")
 }],
 "loop": false,
 "name": &"default",
@@ -261,9 +273,10 @@ animations = [{
 size = Vector2(94, 18.75)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6f8ry"]
-size = Vector2(64, 49)
+size = Vector2(96, 50)
 
 [node name="Dropper" type="RigidBody2D"]
+z_index = 1
 collision_layer = 8
 gravity_scale = 0.0
 lock_rotation = true
@@ -275,6 +288,7 @@ HEALTH = 250
 position = Vector2(0, 1.5)
 scale = Vector2(1, -1)
 sprite_frames = SubResource("SpriteFrames_6huxu")
+autoplay = "default"
 
 [node name="MouthSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
 position = Vector2(0, -22.5)
@@ -319,12 +333,11 @@ position = Vector2(0, -6.375)
 shape = SubResource("RectangleShape2D_62eb3")
 
 [node name="Enemy Hitbox" parent="." node_paths=PackedStringArray("ENEMY", "SPRITE") instance=ExtResource("5_sggrk")]
-visible = false
 ENEMY = NodePath("..")
 SPRITE = NodePath("../ChasisSprite")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy Hitbox"]
-position = Vector2(0, 7.5)
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_6f8ry")
 debug_color = Color(0.0587249, 0.649918, 0, 0.42)
 
@@ -342,6 +355,6 @@ wait_time = 2.0
 one_shot = true
 
 [connection signal="timeout" from="WanderDrop" to="." method="open_mouth"]
-[connection signal="timeout" from="FollowDelay" to="." method="enter_following"]
+[connection signal="timeout" from="FollowDelay" to="." method="enter_following" binds= [true]]
 [connection signal="timeout" from="FollowDrop" to="." method="drop_projectile"]
 [connection signal="timeout" from="CoolDown" to="." method="enter_wander"]

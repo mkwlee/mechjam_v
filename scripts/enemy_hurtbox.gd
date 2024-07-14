@@ -4,16 +4,23 @@ extends Area2D
 @export var DAMAGE : int
 @export var ACTIVE : bool = true
 
+var attacking = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	if ACTIVE:
+		if attacking:
+			for body in get_overlapping_bodies():
+				body.take_damage(DAMAGE)
 
 func _on_body_entered(body):
-	if ACTIVE:
-		if body.name == "Player":
-			body.take_damage(DAMAGE)
+	attacking = true
+		
+
+func _on_body_exited(body):
+	attacking = false
