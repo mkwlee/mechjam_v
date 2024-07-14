@@ -41,53 +41,41 @@ func _ready():
 func _process(delta):
 	
 	if not STAGGER:
-		if state == actions.WANDER:
-			if movement_stop_ray.is_colliding():
-				direction *= -1
-				chasis_sprite.scale.x *= -1
-				linear_velocity.x = direction * SPEED
-			elif enemy_detection_ray.is_colliding():
-				if enemy_detection_ray.get_collider().name == 'Player':
-					enter_preparing()
-					charge_delay.start()
+		match state:
+			actions.WANDER:
+				if linear_velocity.x == 0:
+					direction *= -1
+					chasis_sprite.scale.x *= -1
+					linear_velocity.x = direction * SPEED
+				elif enemy_detection_ray.is_colliding():
+					if enemy_detection_ray.get_collider().name == 'Player':
+						enter_preparing()
+						charge_delay.start()
+						
+			actions.PREPARING:
+				position.y = move_toward(position.y, air, (16 / charge_delay.wait_time)*delta)
+				
+			actions.CHARGING:
+				#if direction == 1 and position.x > target_location.x or direction == -1 and position.x < target_location.x:
+					#fire_sprite.play("default")
+					#linear_velocity.x = move_toward(linear_velocity.x, 0, (SPEED*2)*delta)
 					
-		elif state == actions.PREPARING:
-			position.y = move_toward(position.y, air, (16 / charge_delay.wait_time)*delta)
-			
-		elif state == actions.CHARGING:
-			if direction == 1 and position.x > target_location.x or direction == -1 and position.x < target_location.x:
-				fire_sprite.play("default")
-				linear_velocity.x = move_toward(linear_velocity.x, 0, (SPEED*2)*delta)
 				if linear_velocity.x == 0:
 					enter_cooldown()
 					cool_down.start()
-				
-		elif state == actions.COOLDOWN:
-			position.y = move_toward(position.y, ground, (16 / cool_down.wait_time)*delta)
+					
+			actions.COOLDOWN:
+				position.y = move_toward(position.y, ground, (16 / cool_down.wait_time)*delta)
 	else:
-		if state == actions.PREPARING:
-			charge_delay.paused = true
-		elif state == actions.COOLDOWN:
-			cool_down.paused = true
+		match state:
+			actions.PREPARING:
+				charge_delay.paused = true
+			actions.COOLDOWN:
+				cool_down.paused = true
 		linear_velocity.x = 0
 		spike_sprite.pause()
 		fire_sprite.pause()
 			
-func flip_sprites():
-	if direction > 0:
-		chasis_sprite.flip_h = false
-		fire_sprite.flip_h = false
-		spike_sprite.flip_h = false
-	else:
-		chasis_sprite.flip_h = true
-		fire_sprite.flip_h = true
-		spike_sprite.flip_h = true
-		
-	fire_sprite.position.x *= -1
-	spike_sprite.position.x *= -1
-	movement_stop_ray.target_position.x *= -1
-	enemy_detection_ray.target_position.x *= -1
-
 func enter_wander():
 	linear_velocity.x = direction * SPEED
 	spike_collision.ACTIVE = false
@@ -97,7 +85,7 @@ func enter_wander():
 	state = actions.WANDER
 
 func enter_preparing():
-	target_location = enemy_detection_ray.get_collision_point()
+	#target_location = enemy_detection_ray.get_collision_point()
 	linear_velocity.x = 0
 	chasis_sprite.play("attack")
 	fire_sprite.hide()
@@ -117,7 +105,6 @@ func enter_cooldown():
 	state = actions.COOLDOWN
 
 func exit_stagger():
-	STAGGER = false
 	match state:
 		actions.WANDER:
 			enter_wander()
@@ -125,10 +112,13 @@ func exit_stagger():
 		actions.PREPARING:
 			enter_preparing()
 			charge_delay.paused = false
+			pass
 		actions.CHARGING:
 			enter_charging()
+			pass
 		actions.COOLDOWN:
 			enter_cooldown()
 			cool_down.paused = false
+			pass
 	
 			

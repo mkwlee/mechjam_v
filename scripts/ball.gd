@@ -29,7 +29,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	sprite.rotate(PI/2)
 	
 func _on_body_entered(body):
 	if body.name == "TileMap":

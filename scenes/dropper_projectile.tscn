@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://q05kdyu1aksp"]
+[gd_scene load_steps=8 format=3 uid="uid://q05kdyu1aksp"]
 
 [ext_resource type="Texture2D" uid="uid://dxa5yvw2cva3u" path="res://assets/sprites/dropper/dropper_projectile.png" id="1_dls42"]
+[ext_resource type="Script" path="res://scripts/dropper_projectile.gd" id="1_fl1d0"]
 [ext_resource type="PackedScene" uid="uid://c6fcqep6ex77e" path="res://scenes/enemy_hurtbox.tscn" id="2_uhk63"]
+[ext_resource type="PackedScene" uid="uid://c143x75y0fkh2" path="res://scenes/enemy_hitbox.tscn" id="4_or22o"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5fgjp"]
 radius = 12.0
@@ -9,10 +11,15 @@ radius = 12.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ociu3"]
 size = Vector2(28, 28)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tv7sx"]
+size = Vector2(28, 28)
+
 [node name="Dropper Projectile" type="RigidBody2D"]
 collision_layer = 16
 collision_mask = 3
-gravity_scale = 0.1
+gravity_scale = 0.5
+script = ExtResource("1_fl1d0")
+HEALTH = 100
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, 13.5)
@@ -30,3 +37,15 @@ DAMAGE = 50
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy Hurtbox"]
 shape = SubResource("RectangleShape2D_ociu3")
 debug_color = Color(1, 0.0144794, 0.00058604, 0.42)
+
+[node name="Enemy Hitbox" parent="." node_paths=PackedStringArray("ENEMY", "SPRITE") instance=ExtResource("4_or22o")]
+position = Vector2(0, 13.5)
+ENEMY = NodePath("..")
+SPRITE = NodePath("../Sprite2D")
+STAGGER = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy Hitbox"]
+shape = SubResource("RectangleShape2D_tv7sx")
+debug_color = Color(0.0587249, 0.649918, 0, 0.42)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

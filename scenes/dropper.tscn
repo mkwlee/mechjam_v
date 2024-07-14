@@ -1,9 +1,10 @@
-[gd_scene load_steps=41 format=3 uid="uid://buhew7wlngerc"]
+[gd_scene load_steps=43 format=3 uid="uid://buhew7wlngerc"]
 
 [ext_resource type="Texture2D" uid="uid://b2amch251cyw3" path="res://assets/sprites/dropper/dropper_chasis.png" id="1_3dhpc"]
 [ext_resource type="Script" path="res://scripts/dropper.gd" id="1_ck4ei"]
 [ext_resource type="Texture2D" uid="uid://c45wkl8nvvkec" path="res://assets/sprites/dropper/dropper_mouth.png" id="2_hupnv"]
 [ext_resource type="Texture2D" uid="uid://dmll0et7acbs4" path="res://assets/sprites/dropper/dropper_leg.png" id="3_cpgbl"]
+[ext_resource type="PackedScene" uid="uid://c143x75y0fkh2" path="res://scenes/enemy_hitbox.tscn" id="5_sggrk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_38wce"]
 atlas = ExtResource("1_3dhpc")
@@ -257,7 +258,10 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_62eb3"]
-size = Vector2(64, 47.75)
+size = Vector2(94, 18.75)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6f8ry"]
+size = Vector2(64, 49)
 
 [node name="Dropper" type="RigidBody2D"]
 collision_layer = 8
@@ -265,6 +269,7 @@ gravity_scale = 0.0
 lock_rotation = true
 script = ExtResource("1_ck4ei")
 SPEED = 50
+HEALTH = 250
 
 [node name="ChasisSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 1.5)
@@ -310,10 +315,33 @@ collision_mask = 3
 position = Vector2(0, -18.5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 8.125)
+position = Vector2(0, -6.375)
 shape = SubResource("RectangleShape2D_62eb3")
 
-[node name="WanderDrop" type="Timer" parent="."]
-wait_time = 3.0
+[node name="Enemy Hitbox" parent="." node_paths=PackedStringArray("ENEMY", "SPRITE") instance=ExtResource("5_sggrk")]
+visible = false
+ENEMY = NodePath("..")
+SPRITE = NodePath("../ChasisSprite")
 
-[connection signal="timeout" from="WanderDrop" to="." method="drop_projectile"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy Hitbox"]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_6f8ry")
+debug_color = Color(0.0587249, 0.649918, 0, 0.42)
+
+[node name="WanderDrop" type="Timer" parent="."]
+wait_time = 1.5
+
+[node name="FollowDelay" type="Timer" parent="."]
+one_shot = true
+
+[node name="FollowDrop" type="Timer" parent="."]
+wait_time = 0.25
+
+[node name="CoolDown" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="WanderDrop" to="." method="open_mouth"]
+[connection signal="timeout" from="FollowDelay" to="." method="enter_following"]
+[connection signal="timeout" from="FollowDrop" to="." method="drop_projectile"]
+[connection signal="timeout" from="CoolDown" to="." method="enter_wander"]

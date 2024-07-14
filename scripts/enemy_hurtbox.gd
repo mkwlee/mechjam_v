@@ -17,4 +17,3 @@ func _on_body_entered(body):
 	if ACTIVE:
 		if body.name == "Player":
 			body.take_damage(DAMAGE)
-			print(body.HEALTH)
