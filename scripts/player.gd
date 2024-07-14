@@ -18,6 +18,7 @@ extends CharacterBody2D
 @onready var thrower_tip = $ChasisSprite/ThrowerSprite/ThrowerTip
 @onready var fire_sprite = $ChasisSprite/ThrowerSprite/FireSprite
 @onready var fire_ray_cast = $ChasisSprite/ThrowerSprite/FireRayCast
+@onready var fire_detection = $ChasisSprite/ThrowerSprite/Fire
 
 
 @onready var arms = [[gun_sprite, gun_tip], [charge_sprite, charge_tip], [thrower_sprite, thrower_tip]]
@@ -29,15 +30,22 @@ const FIRE = preload("res://scenes/fire.tscn")
 
 @export var SPEED : int
 @export var JUMP : int
+@export var HEALTH : int
 
 #Timer References
 @onready var gun_cool_down = $Timers/GunCoolDown
 @onready var charge_power_up = $Timers/ChargePowerUp
+@onready var damage_immunity = $Timers/DamageImmunity
 
 @export var GUN_COOLDOWN : float
 @export var CHARGE_POWERUP : float
+@export var DAMAGE_IMMUNITY : float
+
+@onready var health_bar = $"CanvasLayer/Health Bar"
+
 
 var current_arm = 0
+var current_direction = 1
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -54,12 +62,14 @@ func _physics_process(delta):
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction = Input.get_axis("left", "right")
-	if direction:
-		if direction > 0 and chasis_sprite.flip_h == true:
-			flipped_player(false)
-		elif direction < 0 and chasis_sprite.flip_h == false:
-			flipped_player(true)
-			
+	
+		
+	if direction != 0:
+		
+		if current_direction != direction:
+			current_direction = direction
+			scale.x *= -1
+		
 		velocity.x = direction * SPEED
 		if is_on_floor():
 			back_leg_sprite.play("walk")
@@ -77,12 +87,10 @@ func _physics_process(delta):
 		front_leg_sprite.play("jump")
 		
 
-
 	move_and_slide()
 	rotate_arm_up()
 	shoot_gun()
-	
-		
+	#
 		
 	if Input.is_action_just_pressed("switch_arm"):
 		switch_arm()
@@ -120,10 +128,7 @@ func rotate_arm_up():
 	
 	if Input.is_action_pressed("up"):
 		for a in arms:
-			if a[0].flip_h == false:
-				a[0].rotation_degrees = -90
-			else:
-				a[0].rotation_degrees = 90
+			a[0].rotation_degrees = -90
 	else:
 		for a in arms:
 			a[0].rotation_degrees = 0
@@ -135,8 +140,7 @@ func shoot_gun():
 				if Input.is_action_pressed("shoot"):
 					var b = BULLET.instantiate()
 					b.rotation = gun_tip.global_rotation
-					if chasis_sprite.flip_h == true:
-						b.direction = -1
+					b.direction = scale.x
 					b.position = gun_tip.global_position
 					get_parent().add_child(b)
 					gun_sprite.play("shoot")
@@ -158,8 +162,7 @@ func shoot_gun():
 					var time_held = floor(CHARGE_POWERUP - charge_power_up.time_left)
 					var b = BALL.instantiate()
 					b.rotation = charge_tip.global_rotation
-					if chasis_sprite.flip_h == true:
-							b.direction = -1
+					b.direction = scale.x
 					b.position = charge_tip.global_position
 					b.damage_multiplier = pow(10, time_held)
 					b.speed_multiplier = time_held+1
@@ -170,34 +173,31 @@ func shoot_gun():
 			pass
 		2: #Thrower
 			if Input.is_action_pressed("shoot"):
-				#fire_collision.disabled = false
+				fire_detection.collision_shape.disabled = false
 				fire_ray_cast.enabled = true
 				if fire_ray_cast.is_colliding():
 					var ray_size = thrower_tip.global_position.distance_to(fire_ray_cast.get_collision_point())
-					print(ray_size/96)
 					fire_sprite.scale.x = ray_size/96
+					fire_detection.scale.x = ray_size/96
 				else:
 					fire_sprite.scale.x = 1
 				
-				fire_sprite.global_rotation = thrower_tip.global_rotation
-				fire_ray_cast.global_rotation = thrower_tip.global_rotation
-				fire_sprite.global_position = thrower_tip.global_position
-				fire_ray_cast.global_position = thrower_tip.global_position
-
 				fire_sprite.show()
 				fire_sprite.play("fire")
 			else:
-				#fire_collision.disabled = true
+				fire_detection.collision_shape.disabled = true
 				fire_ray_cast.enabled = false
 				fire_sprite.scale.x = 1
+				fire_detection.scale.x = 1
 				fire_sprite.hide()
-			
-	
+
 func set_timers():
 	gun_cool_down.wait_time = GUN_COOLDOWN
 	gun_cool_down.one_shot = true
 	charge_power_up.wait_time = CHARGE_POWERUP
 	charge_power_up.one_shot = true
+	damage_immunity.wait_time = DAMAGE_IMMUNITY
+	damage_immunity.one_shot = true
 
 func switch_arm():
 	if current_arm == 2:
@@ -211,3 +211,13 @@ func switch_arm():
 			arms[a][1].show()
 		else:
 			arms[a][0].hide()
+
+func take_damage(damage_ammount):
+	if damage_immunity.is_stopped():
+		HEALTH -= damage_ammount
+		health_bar.value = max(0, HEALTH)
+		health_bar.get_child(0).value = 100 - HEALTH
+		damage_immunity.start()
+		
+func _on_damage_immunity_timeout():
+	health_bar.get_child(0).value = 0

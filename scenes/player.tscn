@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://6lu8fikb4kl2"]
+[gd_scene load_steps=47 format=3 uid="uid://6lu8fikb4kl2"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_nlx6r"]
 [ext_resource type="Texture2D" uid="uid://dl2plghi0koa5" path="res://assets/sprites/chasis.png" id="1_t5hw6"]
@@ -9,6 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://nv2uhtlg8tg2" path="res://assets/sprites/ball.png" id="6_dpy0p"]
 [ext_resource type="Texture2D" uid="uid://beo2h0pjlaskx" path="res://assets/sprites/thrower.png" id="7_3eqou"]
 [ext_resource type="Texture2D" uid="uid://b7ust0b4spb51" path="res://assets/sprites/fire.png" id="8_dcrug"]
+[ext_resource type="PackedScene" uid="uid://rfbyft7n22d3" path="res://scenes/fire.tscn" id="10_mtk4m"]
+[ext_resource type="PackedScene" uid="uid://dd2to7hej12tk" path="res://scenes/health_bar.tscn" id="11_6j1ix"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jqfqe"]
 atlas = ExtResource("3_rw7xu")
@@ -219,9 +221,6 @@ animations = [{
 "speed": 9.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_nv2gw"]
-size = Vector2(96, 32)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_djvpe"]
 atlas = ExtResource("3_rw7xu")
 region = Rect2(32, 0, 32, 36)
@@ -302,8 +301,10 @@ floor_block_on_wall = false
 script = ExtResource("1_nlx6r")
 SPEED = 150
 JUMP = 400
-GUN_COOLDOWN = 0.5
+HEALTH = 100
+GUN_COOLDOWN = 0.2
 CHARGE_POWERUP = 2.0
+DAMAGE_IMMUNITY = 1.0
 
 [node name="BackLegSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(-4.5, 10.5)
@@ -369,13 +370,8 @@ position = Vector2(26.5, 7)
 target_position = Vector2(96, 0)
 hit_from_inside = true
 
-[node name="Fire" type="Area2D" parent="ChasisSprite/ThrowerSprite"]
+[node name="Fire" parent="ChasisSprite/ThrowerSprite" instance=ExtResource("10_mtk4m")]
 position = Vector2(26.5, 7)
-
-[node name="FireCollision" type="CollisionShape2D" parent="ChasisSprite/ThrowerSprite/Fire"]
-position = Vector2(48, 0)
-shape = SubResource("RectangleShape2D_nv2gw")
-disabled = true
 
 [node name="FrontLegSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(-4.5, 10.5)
@@ -395,3 +391,12 @@ one_shot = true
 
 [node name="ChargePowerUp" type="Timer" parent="Timers"]
 one_shot = true
+
+[node name="DamageImmunity" type="Timer" parent="Timers"]
+one_shot = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Health Bar" parent="CanvasLayer" instance=ExtResource("11_6j1ix")]
+
+[connection signal="timeout" from="Timers/DamageImmunity" to="." method="_on_damage_immunity_timeout"]

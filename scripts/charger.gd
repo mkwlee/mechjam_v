@@ -5,15 +5,19 @@ extends RigidBody2D
 @onready var fire_sprite = $ChasisSprite/FireSprite
 @onready var spike_sprite = $ChasisSprite/SpikeSprite
 
-@onready var movement_stop_ray = $MovementStopRay
-@onready var enemy_detection_ray = $EnemyDetectionRay
+@onready var movement_stop_ray = $ChasisSprite/MovementStopRay
+@onready var enemy_detection_ray = $ChasisSprite/EnemyDetectionRay
 
 @onready var charge_delay = $ChargeDelay
 @onready var cool_down = $CoolDown
 
+@onready var spike_collision = $"ChasisSprite/Spike Collision"
+
+
 @export var SPEED : int
 @export var HEALTH : int
 @export var STAGGER = false
+@export_enum("left", "right") var facing = "right"
 
 var direction = 1
 enum actions {WANDER, PREPARING, CHARGING, COOLDOWN}
@@ -25,11 +29,11 @@ var ground
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	set_continuous_collision_detection_mode(CCD_MODE_CAST_RAY)
-	contact_monitor = true
-	max_contacts_reported = 1
-	linear_velocity.x = direction * SPEED
-	chasis_sprite.play("default")
+	if facing == "left":
+		direction *= -1
+		chasis_sprite.scale.x *= -1
+	enter_wander()
+	
 	ground = position.y
 	air = position.y - 16
 
@@ -40,10 +44,9 @@ func _process(delta):
 		if state == actions.WANDER:
 			if movement_stop_ray.is_colliding():
 				direction *= -1
-				flip_sprites()
+				chasis_sprite.scale.x *= -1
 				linear_velocity.x = direction * SPEED
-			
-			if enemy_detection_ray.is_colliding():
+			elif enemy_detection_ray.is_colliding():
 				if enemy_detection_ray.get_collider().name == 'Player':
 					enter_preparing()
 					charge_delay.start()
@@ -87,6 +90,7 @@ func flip_sprites():
 
 func enter_wander():
 	linear_velocity.x = direction * SPEED
+	spike_collision.ACTIVE = false
 	chasis_sprite.play("default")
 	fire_sprite.play("default")
 	fire_sprite.show()
@@ -102,6 +106,7 @@ func enter_preparing():
 
 func enter_charging():
 	linear_velocity.x = direction * SPEED * 2
+	spike_collision.ACTIVE = true
 	fire_sprite.play("charging")
 	fire_sprite.show()
 	state = actions.CHARGING

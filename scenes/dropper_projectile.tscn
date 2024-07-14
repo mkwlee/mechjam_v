@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://q05kdyu1aksp"]
+
+[ext_resource type="Texture2D" uid="uid://dxa5yvw2cva3u" path="res://assets/sprites/dropper/dropper_projectile.png" id="1_dls42"]
+[ext_resource type="PackedScene" uid="uid://c6fcqep6ex77e" path="res://scenes/enemy_hurtbox.tscn" id="2_uhk63"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5fgjp"]
+radius = 12.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ociu3"]
+size = Vector2(28, 28)
+
+[node name="Dropper Projectile" type="RigidBody2D"]
+collision_layer = 16
+collision_mask = 3
+gravity_scale = 0.1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 13.5)
+texture = ExtResource("1_dls42")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 13.5)
+shape = SubResource("CircleShape2D_5fgjp")
+
+[node name="Enemy Hurtbox" parent="." node_paths=PackedStringArray("ENEMY") instance=ExtResource("2_uhk63")]
+position = Vector2(0, 13.5)
+ENEMY = NodePath("..")
+DAMAGE = 50
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy Hurtbox"]
+shape = SubResource("RectangleShape2D_ociu3")
+debug_color = Color(1, 0.0144794, 0.00058604, 0.42)

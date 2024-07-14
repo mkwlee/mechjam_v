@@ -1,10 +1,11 @@
-[gd_scene load_steps=24 format=3 uid="uid://cx13sky8kswwi"]
+[gd_scene load_steps=26 format=3 uid="uid://cx13sky8kswwi"]
 
 [ext_resource type="Script" path="res://scripts/charger.gd" id="1_eeha0"]
 [ext_resource type="Texture2D" uid="uid://cob8u6kp3epyp" path="res://assets/sprites/charger/charger_chasis.png" id="1_n7ts8"]
 [ext_resource type="Texture2D" uid="uid://b5eana0kmsxm7" path="res://assets/sprites/charger/charger_fire.png" id="2_xyd3w"]
 [ext_resource type="Texture2D" uid="uid://du3hkekb04dtl" path="res://assets/sprites/charger/charger_spike.png" id="3_ah51i"]
 [ext_resource type="PackedScene" uid="uid://c143x75y0fkh2" path="res://scenes/enemy_hitbox.tscn" id="5_pv5kt"]
+[ext_resource type="PackedScene" uid="uid://c6fcqep6ex77e" path="res://scenes/enemy_hurtbox.tscn" id="6_ahq4i"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ecxtn"]
 atlas = ExtResource("1_n7ts8")
@@ -131,11 +132,14 @@ animations = [{
 "speed": 9.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_i5xcc"]
-size = Vector2(29, 26)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ijk0g"]
 size = Vector2(33, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j8fpw"]
+size = Vector2(15, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i5xcc"]
+size = Vector2(32, 30)
 
 [node name="Charger" type="RigidBody2D"]
 collision_layer = 8
@@ -143,7 +147,7 @@ gravity_scale = 0.0
 lock_rotation = true
 script = ExtResource("1_eeha0")
 SPEED = 100
-HEALTH = 150
+HEALTH = 500
 
 [node name="ChasisSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -3)
@@ -154,27 +158,44 @@ animation = &"attack"
 z_index = -1
 position = Vector2(17, 7)
 sprite_frames = SubResource("SpriteFrames_ku74t")
+frame = 2
 
 [node name="FireSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
 position = Vector2(-32, 0)
 sprite_frames = SubResource("SpriteFrames_5kkcb")
 autoplay = "default"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2(1.27156e-07, -2.5)
-rotation = 1.5708
-shape = SubResource("RectangleShape2D_i5xcc")
-
-[node name="MovementStopRay" type="RayCast2D" parent="."]
-position = Vector2(0, -3)
+[node name="MovementStopRay" type="RayCast2D" parent="ChasisSprite"]
 target_position = Vector2(33, 0)
 hit_from_inside = true
 
-[node name="EnemyDetectionRay" type="RayCast2D" parent="."]
-position = Vector2(0, -3)
+[node name="EnemyDetectionRay" type="RayCast2D" parent="ChasisSprite"]
 target_position = Vector2(640, 0)
 collision_mask = 3
+
+[node name="Hitbox" parent="ChasisSprite" node_paths=PackedStringArray("ENEMY", "SPRITE") instance=ExtResource("5_pv5kt")]
+position = Vector2(0.5, 1.5)
+ENEMY = NodePath("../..")
+SPRITE = NodePath("..")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="ChasisSprite/Hitbox"]
+shape = SubResource("RectangleShape2D_ijk0g")
+debug_color = Color(0.0587249, 0.649918, 0, 0.42)
+
+[node name="Spike Collision" parent="ChasisSprite" node_paths=PackedStringArray("ENEMY") instance=ExtResource("6_ahq4i")]
+position = Vector2(27, 7)
+ENEMY = NodePath("../..")
+DAMAGE = 20
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChasisSprite/Spike Collision"]
+position = Vector2(-3.5, 0)
+shape = SubResource("RectangleShape2D_j8fpw")
+debug_color = Color(1, 0.0144794, 0.00058604, 0.42)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, -3)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_i5xcc")
 
 [node name="ChargeDelay" type="Timer" parent="."]
 wait_time = 0.3
@@ -183,16 +204,6 @@ one_shot = true
 [node name="CoolDown" type="Timer" parent="."]
 wait_time = 1.5
 one_shot = true
-
-[node name="Enemy Hitbox" parent="." node_paths=PackedStringArray("ENEMY", "SPRITE") instance=ExtResource("5_pv5kt")]
-ENEMY = NodePath("..")
-SPRITE = NodePath("../ChasisSprite")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Enemy Hitbox"]
-visible = false
-position = Vector2(0.5, -1.5)
-shape = SubResource("RectangleShape2D_ijk0g")
-debug_color = Color(1, 0.0144794, 0.00058604, 0.42)
 
 [connection signal="timeout" from="ChargeDelay" to="." method="enter_charging"]
 [connection signal="timeout" from="CoolDown" to="." method="enter_wander"]

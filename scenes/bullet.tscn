@@ -13,7 +13,7 @@ collision_mask = 9
 gravity_scale = 0.0
 script = ExtResource("1_bcfam")
 SPEED = 500
-DAMAGE = 50
+DAMAGE = 100
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-2, 0)
