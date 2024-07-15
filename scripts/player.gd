@@ -1,41 +1,40 @@
 extends CharacterBody2D
 
 #Node References
-@onready var back_leg_sprite = $BackLegSprite
-@onready var chasis_sprite = $ChasisSprite
-@onready var front_leg_sprite = $FrontLegSprite
+@onready var back_leg_sprite : AnimatedSprite2D = $BackLegSprite
+@onready var chasis_sprite : AnimatedSprite2D = $ChasisSprite
+@onready var front_leg_sprite : AnimatedSprite2D = $FrontLegSprite
 
-@onready var gun_sprite = $ChasisSprite/GunSprite
-@onready var gun_tip = $ChasisSprite/GunSprite/GunTip
-
-
-@onready var charge_sprite = $ChasisSprite/ChargeSprite
-@onready var charge_tip = $ChasisSprite/ChargeSprite/ChargeTip
-@onready var ball_sprite = $ChasisSprite/ChargeSprite/BallSprite
+@onready var gun_sprite : AnimatedSprite2D = $ChasisSprite/GunSprite
+@onready var gun_tip : Marker2D = $ChasisSprite/GunSprite/GunTip
 
 
-@onready var thrower_sprite = $ChasisSprite/ThrowerSprite
-@onready var thrower_tip = $ChasisSprite/ThrowerSprite/ThrowerTip
-@onready var fire_sprite = $ChasisSprite/ThrowerSprite/FireSprite
-@onready var fire_ray_cast = $ChasisSprite/ThrowerSprite/FireRayCast
-@onready var fire_detection = $ChasisSprite/ThrowerSprite/Fire
+@onready var charge_sprite : AnimatedSprite2D = $ChasisSprite/ChargeSprite
+@onready var charge_tip : Marker2D = $ChasisSprite/ChargeSprite/ChargeTip
+@onready var ball_sprite : Sprite2D = $ChasisSprite/ChargeSprite/BallSprite
+
+
+@onready var thrower_sprite : AnimatedSprite2D = $ChasisSprite/ThrowerSprite
+@onready var thrower_tip : Marker2D = $ChasisSprite/ThrowerSprite/ThrowerTip
+@onready var fire_sprite : AnimatedSprite2D = $ChasisSprite/ThrowerSprite/FireSprite
+@onready var fire_ray_cast : RayCast2D = $ChasisSprite/ThrowerSprite/FireRayCast
+@onready var fire_detection : Area2D = $ChasisSprite/ThrowerSprite/Fire
 
 
 @onready var arms = [[gun_sprite, gun_tip], [charge_sprite, charge_tip], [thrower_sprite, thrower_tip]]
 
 #Scene references
-const BULLET = preload("res://scenes/bullet.tscn")
-const BALL = preload("res://scenes/ball.tscn")
-const FIRE = preload("res://scenes/fire.tscn")
+const BULLET : PackedScene = preload("res://scenes/bullet.tscn")
+const BALL : PackedScene = preload("res://scenes/ball.tscn")
 
 @export var SPEED : int
 @export var JUMP : int
 @export var HEALTH : int
 
 #Timer References
-@onready var gun_cool_down = $Timers/GunCoolDown
-@onready var charge_power_up = $Timers/ChargePowerUp
-@onready var damage_immunity = $Timers/DamageImmunity
+@onready var gun_cool_down : Timer = $Timers/GunCoolDown
+@onready var charge_power_up : Timer = $Timers/ChargePowerUp
+@onready var damage_immunity : Timer = $Timers/DamageImmunity
 
 @export var GUN_COOLDOWN : float
 @export var CHARGE_POWERUP : float
@@ -44,8 +43,8 @@ const FIRE = preload("res://scenes/fire.tscn")
 @onready var health_bar = $"CanvasLayer/Health Bar"
 
 
-var current_arm = 0
-var current_direction = 1
+var current_arm : int = 0
+var current_direction : int = 1
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -119,13 +118,6 @@ func flipped_player(state):
 	front_leg_sprite.offset.x *= -1
 
 func rotate_arm_up():
-	#var hyp = gun_sprite.global_position.direction_to(get_global_mouse_position())
-	#var disp = (sinh(8.5/gun_sprite.global_position.distance_to(get_global_mouse_position())))
-	#gun_sprite.rotation = hyp.angle() - disp
-	#
-	#if chasis_sprite.flip_h == true:
-		#gun_sprite.rotation = hyp.angle() + disp + PI
-	
 	if Input.is_action_pressed("up"):
 		for a in arms:
 			a[0].rotation_degrees = -90
@@ -181,6 +173,7 @@ func shoot_gun():
 					fire_detection.scale.x = ray_size/96
 				else:
 					fire_sprite.scale.x = 1
+					fire_detection.scale.x = 1
 				
 				fire_sprite.show()
 				fire_sprite.play("fire")

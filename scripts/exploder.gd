@@ -56,8 +56,9 @@ func _process(delta):
 				linear_velocity = global_position.direction_to(player.gun_tip.global_position)*SPEED
 				if global_position.distance_to(player.global_position) <= 32:
 					enter_exploding()
-				elif enemy_detection_ray.get_collider().name != 'Player':
-					enter_idle()
+				elif enemy_detection_ray.is_colliding():
+					if enemy_detection_ray.get_collider().name != 'Player':
+						enter_idle()
 				pass
 			actions.EXPLODING:
 				if explosion_size < 0:

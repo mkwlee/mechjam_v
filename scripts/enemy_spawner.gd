@@ -33,15 +33,14 @@ func spawner_screen_exited():
 	pass
 	
 func death_location_screen_entered():
-	off_screen_timer.stop()
-	print('STOP')
+	if not enemy_dead:
+		off_screen_timer.stop()
 	
 func death_location_screen_exited():
 	if enemy_dead:
 		active = true
 	else:
 		off_screen_timer.start()
-		print('START')
 
 func spawn_enemy():
 	enemy = ENEMY_TYPE.instantiate()
@@ -51,7 +50,6 @@ func spawn_enemy():
 	get_tree().current_scene.add_child(enemy)
 
 func is_off_screen_long():
-	print('DIED OFF SCREEN')
 	enemy_dead = true
 	active = true
 	enemy.queue_free()
