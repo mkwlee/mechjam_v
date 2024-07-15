@@ -304,7 +304,7 @@ JUMP = 400
 HEALTH = 100
 GUN_COOLDOWN = 0.2
 CHARGE_POWERUP = 2.0
-DAMAGE_IMMUNITY = 1.0
+DAMAGE_IMMUNITY = 0.5
 
 [node name="BackLegSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(-4.5, 10.5)

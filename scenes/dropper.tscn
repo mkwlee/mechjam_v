@@ -342,7 +342,7 @@ shape = SubResource("RectangleShape2D_6f8ry")
 debug_color = Color(0.0587249, 0.649918, 0, 0.42)
 
 [node name="WanderDrop" type="Timer" parent="."]
-wait_time = 1.5
+wait_time = 2.0
 
 [node name="FollowDelay" type="Timer" parent="."]
 one_shot = true

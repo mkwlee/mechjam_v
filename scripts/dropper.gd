@@ -16,6 +16,8 @@ extends RigidBody2D
 @export var HEALTH : int
 @export var STAGGER = false
 @export_enum("left", "right") var facing = "right"
+var DEAD = false
+var SPAWNER
 
 #Timers
 @onready var wander_drop = $WanderDrop
@@ -25,10 +27,12 @@ extends RigidBody2D
 
 #Scene Const
 const SCRAPS = preload("res://scenes/scraps.tscn")
+
 #Var
 var direction = 1
 enum actions {WANDER, PREPARING, FOLLOWING, COOLDOWN}
 var state = actions.WANDER
+
 var player
 var target_location
 
@@ -42,6 +46,10 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if DEAD == true:
+		SPAWNER.enemy_dead = true
+		queue_free()
+	
 	if not STAGGER:
 		match state:
 			actions.WANDER:

@@ -9,7 +9,7 @@ extends Area2D
 @onready var impact_timer = $ImpactTimer
 
 var on_fire = false
-var dead = false
+var dying = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -32,7 +32,7 @@ func _on_body_entered(body):
 		ENEMY.HEALTH = damage_and_stagger(ENEMY.HEALTH, body.DAMAGE)
 		
 		if ENEMY.HEALTH < 1:
-			dead = true
+			dying = true
 			
 		impact_timer.start()
 		#body.queue_free()
@@ -45,8 +45,8 @@ func damage_and_stagger(health, damage):
 	return health - damage
 
 func _on_impact_timer_timeout():
-	if dead:
-		ENEMY.queue_free()
+	if dying:
+		ENEMY.DEAD = true
 	else:
 		SPRITE.modulate = Color.WHITE
 		if STAGGER:

@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://ergukfj1vl74"]
+
+[ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="1_kvmxq"]
+[ext_resource type="Texture2D" uid="uid://fth0x3jq7cn5" path="res://assets/sprites/cursor.png" id="2_yfnf2"]
+
+[node name="Enemy Spawner" type="Node2D"]
+script = ExtResource("1_kvmxq")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_yfnf2")
+
+[node name="SpawnLocationNotifier" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-64, -64, 128, 128)
+
+[node name="DeathLocationNotifier" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-64, -64, 128, 128)
+
+[node name="OffScreenTimer" type="Timer" parent="."]
+wait_time = 20.0
+one_shot = true
+
+[connection signal="screen_entered" from="SpawnLocationNotifier" to="." method="spawner_screen_entered"]
+[connection signal="screen_exited" from="SpawnLocationNotifier" to="." method="spawner_screen_exited"]
+[connection signal="screen_entered" from="DeathLocationNotifier" to="." method="death_location_screen_entered"]
+[connection signal="screen_exited" from="DeathLocationNotifier" to="." method="death_location_screen_exited"]
+[connection signal="timeout" from="OffScreenTimer" to="." method="is_off_screen_long"]

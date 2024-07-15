@@ -18,10 +18,14 @@ extends RigidBody2D
 @export var HEALTH : int
 @export var STAGGER = false
 @export_enum("left", "right") var facing = "right"
+var DEAD = false
+var SPAWNER
 
 var direction = 1
 enum actions {WANDER, PREPARING, CHARGING, COOLDOWN}
 var state = actions.WANDER
+
+
 var target_location
 var air
 var ground
@@ -39,6 +43,10 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	
+	if DEAD == true:
+		SPAWNER.enemy_dead = true
+		queue_free()
 	
 	if not STAGGER:
 		match state:

@@ -15,10 +15,13 @@ extends RigidBody2D
 @export var HEALTH : int
 @export var STAGGER = false
 @export_enum("left", "right") var facing = "right"
+var DEAD = false
+var SPAWNER
 
 
 enum actions {IDLE, PREPARING, CHASING, EXPLODING}
 var state = actions.IDLE
+
 var player
 var target_location
 var explosion_size = 3
@@ -30,6 +33,10 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if DEAD == true:
+		SPAWNER.enemy_dead = true
+		queue_free()
+	
 	
 	if not STAGGER:
 		match state:
@@ -45,11 +52,11 @@ func _process(delta):
 				chasis_sprite.rotation = global_position.angle_to_point(player.gun_tip.global_position)
 				pass
 			actions.CHASING:
-				chasis_sprite.rotation = global_position.angle_to_point(player.gun_tip.global_position)
-				linear_velocity = global_position.direction_to(player.global_position)*SPEED
+				chasis_sprite.rotation = global_position.angle_to_point(player.global_position)
+				linear_velocity = global_position.direction_to(player.gun_tip.global_position)*SPEED
 				if global_position.distance_to(player.global_position) <= 32:
 					enter_exploding()
-				elif enemy_detection_ray.get_collider().name != 'Player' or linear_velocity == Vector2(0,0):
+				elif enemy_detection_ray.get_collider().name != 'Player':
 					enter_idle()
 				pass
 			actions.EXPLODING:
@@ -78,13 +85,13 @@ func enter_exploding():
 
 func animated_explosion():
 	if explosion_size < 0:
+		SPAWNER.enemy_dead = true
 		queue_free()
 	else:
 		explosion.get_child(explosion_size).show()
 		explosion_size -= 1
 		if explosion_size < 0:
 			explosion_spread.wait_time = 0.25
-			#explosion_spread.stop()
 
 func randomize_explosion():
 	var flip = randi_range(0, 1)
