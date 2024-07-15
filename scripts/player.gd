@@ -44,6 +44,7 @@ const BALL : PackedScene = preload("res://scenes/ball.tscn")
 
 
 var current_arm : int = 0
+var unlocked_arms = [1, 0, 0]
 var current_direction : int = 1
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -134,7 +135,7 @@ func shoot_gun():
 					b.rotation = gun_tip.global_rotation
 					b.direction = scale.x
 					b.position = gun_tip.global_position
-					get_parent().add_child(b)
+					get_tree().current_scene.add_child(b)
 					gun_sprite.play("shoot")
 					gun_cool_down.start()
 			pass
@@ -160,7 +161,7 @@ func shoot_gun():
 					b.speed_multiplier = time_held+1
 					b.size = Vector2(0.5+0.25*time_held, 0.5+0.25*time_held)
 					ball_sprite.hide()
-					get_parent().add_child(b)
+					get_tree().current_scene.add_child(b)
 					charge_sprite.play("shoot")
 			pass
 		2: #Thrower
@@ -193,10 +194,10 @@ func set_timers():
 	damage_immunity.one_shot = true
 
 func switch_arm():
-	if current_arm == 2:
-		current_arm = 0
-	else:
-		current_arm += 1
+	
+	current_arm = (current_arm + 1) % 3
+	while not unlocked_arms[current_arm]:
+		current_arm = (current_arm + 1) % 3
 		
 	for a in 3:
 		if a == current_arm:

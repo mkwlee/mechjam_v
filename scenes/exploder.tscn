@@ -86,7 +86,7 @@ gravity_scale = 0.0
 lock_rotation = true
 script = ExtResource("1_87a8b")
 SPEED = 50
-HEALTH = 200
+HEALTH = 100
 
 [node name="ChasisSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_j7rhe")

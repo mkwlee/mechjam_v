@@ -22,10 +22,10 @@ func _process(delta):
 func _on_body_entered(body):
 	if body.name == "TileMap":
 		queue_free()
-	elif gravity_scale == 0 and body.name != "Tilemap":
-		gravity_scale = 1
-	else:
-		queue_free()
+	#elif gravity_scale == 0 and body.name != "Tilemap":
+		#gravity_scale = 1
+	#else:
+		#queue_free()
 
 
 func _on_visible_on_screen_notifier_2d_screen_exited():

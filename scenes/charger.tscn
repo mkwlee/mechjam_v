@@ -139,19 +139,20 @@ size = Vector2(32, 31)
 size = Vector2(15, 8)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i5xcc"]
-size = Vector2(32, 30)
+size = Vector2(32, 29)
 
 [node name="Charger" type="RigidBody2D"]
 z_index = 1
 collision_layer = 8
+collision_mask = 9
 gravity_scale = 0.0
 lock_rotation = true
 script = ExtResource("1_eeha0")
 SPEED = 100
-HEALTH = 500
+HEALTH = 300
 
 [node name="ChasisSprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, -3)
+position = Vector2(0, -16)
 sprite_frames = SubResource("SpriteFrames_puudn")
 autoplay = "default"
 
@@ -171,7 +172,7 @@ target_position = Vector2(33, 0)
 hit_from_inside = true
 
 [node name="EnemyDetectionRay" type="RayCast2D" parent="ChasisSprite"]
-target_position = Vector2(640, 0)
+target_position = Vector2(256, 0)
 collision_mask = 3
 
 [node name="Hitbox" parent="ChasisSprite" node_paths=PackedStringArray("ENEMY", "SPRITE") instance=ExtResource("5_pv5kt")]
@@ -195,7 +196,7 @@ shape = SubResource("RectangleShape2D_j8fpw")
 debug_color = Color(1, 0.0144794, 0.00058604, 0.42)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1, -3)
+position = Vector2(0.5, -16)
 rotation = 1.5708
 shape = SubResource("RectangleShape2D_i5xcc")
 
