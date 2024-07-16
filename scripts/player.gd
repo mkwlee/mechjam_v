@@ -29,22 +29,21 @@ const BALL : PackedScene = preload("res://scenes/ball.tscn")
 
 @export var SPEED : int
 @export var JUMP : int
-@export var HEALTH : int
 
 #Timer References
 @onready var gun_cool_down : Timer = $Timers/GunCoolDown
 @onready var charge_power_up : Timer = $Timers/ChargePowerUp
 @onready var damage_immunity : Timer = $Timers/DamageImmunity
 
+
 @export var GUN_COOLDOWN : float
 @export var CHARGE_POWERUP : float
 @export var DAMAGE_IMMUNITY : float
 
-@onready var health_bar = $"CanvasLayer/Health Bar"
+@onready var health_bar = GUI.health_bar
 
 
 var current_arm : int = 0
-var unlocked_arms = [1, 0, 0]
 var current_direction : int = 1
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -196,7 +195,8 @@ func set_timers():
 func switch_arm():
 	
 	current_arm = (current_arm + 1) % 3
-	while not unlocked_arms[current_arm]:
+	GameManager
+	while not GameManager.unlocked_arms[current_arm]:
 		current_arm = (current_arm + 1) % 3
 		
 	for a in 3:
@@ -208,12 +208,9 @@ func switch_arm():
 
 func take_damage(damage_ammount):
 	if damage_immunity.is_stopped():
+		GameManager.damage_or_heal(-damage_ammount)
 		modulate = Color.RED
-		HEALTH -= damage_ammount
-		health_bar.value = max(0, HEALTH)
-		health_bar.get_child(0).value = 100 - HEALTH
 		damage_immunity.start()
 		
 func _on_damage_immunity_timeout():
 	modulate = Color.WHITE
-	health_bar.get_child(0).value = 0

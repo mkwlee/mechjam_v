@@ -17,6 +17,7 @@ func _process(delta):
 		if attacking:
 			for body in get_overlapping_bodies():
 				body.take_damage(DAMAGE)
+			attacking = false
 
 func _on_body_entered(body):
 	attacking = true

@@ -160,7 +160,6 @@ autoplay = "default"
 z_index = -1
 position = Vector2(17, 7)
 sprite_frames = SubResource("SpriteFrames_ku74t")
-frame = 2
 
 [node name="FireSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
 position = Vector2(-32, 0)
@@ -169,11 +168,11 @@ autoplay = "default"
 
 [node name="MovementStopRay" type="RayCast2D" parent="ChasisSprite"]
 target_position = Vector2(33, 0)
-hit_from_inside = true
+collision_mask = 9
 
 [node name="EnemyDetectionRay" type="RayCast2D" parent="ChasisSprite"]
 target_position = Vector2(256, 0)
-collision_mask = 3
+collision_mask = 11
 
 [node name="Hitbox" parent="ChasisSprite" node_paths=PackedStringArray("ENEMY", "SPRITE") instance=ExtResource("5_pv5kt")]
 position = Vector2(0.5, 1.5)

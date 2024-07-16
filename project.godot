@@ -18,6 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
+GameManager="*res://scripts/game_manager.gd"
+GUI="*res://scenes/gui.tscn"
 
 [display]
 
@@ -75,7 +77,7 @@ switch_arm={
 2d_physics/layer_3="Player Projectiles"
 2d_physics/layer_4="Enemies"
 2d_physics/layer_5="Enemy Projectiles"
-2d_physics/layer_6="Layer 6"
+2d_physics/layer_6="Pickups"
 
 [rendering]
 

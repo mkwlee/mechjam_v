@@ -34,14 +34,12 @@ func spawner_screen_exited():
 	
 func death_location_screen_entered():
 	if not enemy_dead:
-		print('onscreen')
 		off_screen_timer.stop()
 	
 func death_location_screen_exited():
 	if enemy_dead:
 		active = true
 	else:
-		print('offscreen')
 		off_screen_timer.start()
 
 func spawn_enemy():

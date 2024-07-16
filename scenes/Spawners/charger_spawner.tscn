@@ -16,7 +16,7 @@ hframes = 2
 rect = Rect2(-64, -64, 128, 128)
 
 [node name="DeathLocationNotifier" type="VisibleOnScreenNotifier2D" parent="."]
-rect = Rect2(-64, -64, 128, 128)
+rect = Rect2(-32, -32, 64, 64)
 
 [node name="OffScreenTimer" type="Timer" parent="."]
 wait_time = 20.0
