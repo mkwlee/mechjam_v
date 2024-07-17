@@ -8,6 +8,7 @@ extends RigidBody2D
 
 @onready var chase_delay = $ChaseDelay
 @onready var explosion_spread = $ExplosionSpread
+@onready var no_enemy_detect_idle_delay = $NoEnemyDetectIdleDelay
 
 @onready var enemy_hurtbox = $"Enemy Hurtbox"
 
@@ -53,12 +54,16 @@ func _process(delta):
 				pass
 			actions.CHASING:
 				chasis_sprite.rotation = global_position.angle_to_point(player.global_position)
-				linear_velocity = global_position.direction_to(player.gun_tip.global_position)*SPEED
-				if global_position.distance_to(player.global_position) <= 32:
+				var chase_direction = global_position.direction_to(player.gun_tip.global_position).normalized()
+				linear_velocity = Vector2(chase_direction.x*SPEED*1.5, chase_direction.y*SPEED)
+				
+				if global_position.distance_to(player.global_position) <= 40:
 					enter_exploding()
 				elif enemy_detection_ray.is_colliding():
-					if enemy_detection_ray.get_collider().name != 'Player':
-						enter_idle()
+					if enemy_detection_ray.get_collider().name == 'Player':
+						no_enemy_detect_idle_delay.stop()
+					elif no_enemy_detect_idle_delay.is_stopped():
+						no_enemy_detect_idle_delay.start()
 				pass
 			actions.EXPLODING:
 				if explosion_size < 0:

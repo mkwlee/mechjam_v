@@ -35,7 +35,6 @@ func reset_damage_heal_bar():
 	if damage_bar.value > health_bar.value:
 		damage_bar.value = health_bar.value
 	elif heal_bar.value > damage_bar.value:
-		print('ahj')
 		health_bar.value = heal_bar.value
 		damage_bar.value = heal_bar.value
 

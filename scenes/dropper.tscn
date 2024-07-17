@@ -353,7 +353,6 @@ one_shot = true
 wait_time = 0.3
 
 [node name="CoolDown" type="Timer" parent="."]
-wait_time = 2.0
 one_shot = true
 
 [connection signal="timeout" from="WanderDrop" to="." method="open_mouth"]
