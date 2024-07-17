@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://csf5o0b0fadxr"]
+
+[ext_resource type="Texture2D" uid="uid://4k5k8w8b56nn" path="res://assets/sprites/key_hole.png" id="1_0qo1h"]
+[ext_resource type="Script" path="res://scripts/key_hole.gd" id="1_y5lgu"]
+[ext_resource type="Texture2D" uid="uid://xgdr885besee" path="res://assets/sprites/key.png" id="2_w6i1v"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4f42q"]
+size = Vector2(96, 35)
+
+[node name="KeyHole" type="Area2D"]
+z_index = -1
+collision_mask = 2
+script = ExtResource("1_y5lgu")
+
+[node name="Hole" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(0, -1.5)
+texture = ExtResource("1_0qo1h")
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(0, -1.5)
+
+[node name="Key1" type="Sprite2D" parent="Node2D"]
+visible = false
+position = Vector2(-18, -19.5)
+texture = ExtResource("2_w6i1v")
+
+[node name="Key2" type="Sprite2D" parent="Node2D"]
+visible = false
+position = Vector2(18, -19.5)
+texture = ExtResource("2_w6i1v")
+
+[node name="Key3" type="Sprite2D" parent="Node2D"]
+visible = false
+z_index = -1
+position = Vector2(0, -25.5)
+texture = ExtResource("2_w6i1v")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -1.5)
+shape = SubResource("RectangleShape2D_4f42q")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

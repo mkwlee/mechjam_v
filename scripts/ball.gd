@@ -11,6 +11,7 @@ var direction = 1
 var speed_multiplier
 var damage_multiplier
 var size
+var proj_type = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

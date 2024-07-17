@@ -4,6 +4,7 @@ extends RigidBody2D
 @export var DAMAGE : int
 
 var direction = 1
+var proj_type = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

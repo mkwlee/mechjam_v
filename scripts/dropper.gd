@@ -133,6 +133,7 @@ func enter_following(inital):
 	
 	
 	follow_drop.start()
+	drop_projectile()
 	state = actions.FOLLOWING
 	
 func enter_cooldown():

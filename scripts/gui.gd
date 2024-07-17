@@ -1,9 +1,13 @@
 extends CanvasLayer
 
-@onready var health_bar = $HealthBar
-@onready var damage_bar = $DamageBar
-@onready var heal_bar = $HealBar
+@onready var damage_bar = $Control/MarginContainer/DamageBar
+@onready var heal_bar = $Control/MarginContainer/HealBar
+@onready var health_bar = $Control/MarginContainer/HealthBar
+@onready var key_progress = $Control/MarginContainer/KeyProgress
+
+
 @onready var damage_heal_bar = $DamageHealBar
+
 
 
 # Called when the node enters the scene tree for the first time.
@@ -32,3 +36,10 @@ func reset_damage_heal_bar():
 	elif heal_bar.value > damage_bar.value:
 		health_bar.value = heal_bar.value
 		damage_bar.value = heal_bar.value
+
+func change_key_progress(num_of_keys, change_amount):
+	if change_amount > 0:
+		key_progress.value = min(3, num_of_keys+change_amount)
+	elif change_amount < 0:
+		key_progress.value = max(0, num_of_keys+change_amount)
+	return key_progress.value

@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3 uid="uid://cput0x8afdbcj"]
+
+[ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="1_s4m6l"]
+[ext_resource type="PackedScene" uid="uid://buhew7wlngerc" path="res://scenes/dropper.tscn" id="2_fbfsd"]
+[ext_resource type="Texture2D" uid="uid://b2amch251cyw3" path="res://assets/sprites/dropper/dropper_chasis.png" id="2_nktym"]
+[ext_resource type="Texture2D" uid="uid://dmll0et7acbs4" path="res://assets/sprites/dropper/dropper_leg.png" id="3_tpouw"]
+[ext_resource type="Texture2D" uid="uid://c45wkl8nvvkec" path="res://assets/sprites/dropper/dropper_mouth.png" id="4_jqk88"]
+
+[node name="DropperSpawner" type="Node2D"]
+script = ExtResource("1_s4m6l")
+ENEMY_TYPE = ExtResource("2_fbfsd")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_nktym")
+flip_v = true
+hframes = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Sprite"]
+position = Vector2(-31.5, -6)
+texture = ExtResource("3_tpouw")
+flip_v = true
+hframes = 4
+
+[node name="Sprite2D2" type="Sprite2D" parent="Sprite"]
+position = Vector2(31.5, -6)
+texture = ExtResource("3_tpouw")
+flip_h = true
+flip_v = true
+hframes = 4
+
+[node name="Sprite2D3" type="Sprite2D" parent="Sprite"]
+position = Vector2(0, 22.5)
+texture = ExtResource("4_jqk88")
+flip_v = true
+hframes = 4
+
+[node name="SpawnLocationNotifier" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-64, -48, 128, 96)
+
+[node name="DeathLocationNotifier" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-64, -48, 128, 96)
+
+[node name="OffScreenTimer" type="Timer" parent="."]
+wait_time = 20.0
+one_shot = true
+
+[connection signal="screen_entered" from="SpawnLocationNotifier" to="." method="spawner_screen_entered"]
+[connection signal="screen_exited" from="SpawnLocationNotifier" to="." method="spawner_screen_exited"]
+[connection signal="screen_entered" from="DeathLocationNotifier" to="." method="death_location_screen_entered"]
+[connection signal="screen_exited" from="DeathLocationNotifier" to="." method="death_location_screen_exited"]
+[connection signal="timeout" from="OffScreenTimer" to="." method="is_off_screen_long"]

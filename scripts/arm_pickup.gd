@@ -1,10 +1,10 @@
 extends Area2D
 
-@export var key_num : int
+@export var arm_type : int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if GameManager.collected_keys[key_num]:
+	if GameManager.unlocked_arms[arm_type] == 1:
 		queue_free()
 
 
@@ -14,8 +14,7 @@ func _process(delta):
 
 
 func _on_body_entered(body):
+	GameManager.unlocked_arms[arm_type] = 1
 	if body.name == "Player":
-		GameManager.add_or_remove_key_to_player(1)
-		GameManager.damage_or_heal(50)
-		GameManager.collected_keys[key_num] = 1
-		queue_free()
+		body.switch_arm(arm_type)
+	queue_free()

@@ -84,7 +84,6 @@ func _physics_process(delta):
 		velocity.y = -JUMP
 		back_leg_sprite.play("jump")
 		front_leg_sprite.play("jump")
-		
 
 	move_and_slide()
 	rotate_arm_up()
@@ -92,7 +91,7 @@ func _physics_process(delta):
 	#
 		
 	if Input.is_action_just_pressed("switch_arm"):
-		switch_arm()
+		switch_arm(-1)
 
 func flipped_player(state):
 	chasis_sprite.flip_h = state
@@ -192,12 +191,13 @@ func set_timers():
 	damage_immunity.wait_time = DAMAGE_IMMUNITY
 	damage_immunity.one_shot = true
 
-func switch_arm():
-	
-	current_arm = (current_arm + 1) % 3
-	GameManager
-	while not GameManager.unlocked_arms[current_arm]:
+func switch_arm(specific_arm):
+	if specific_arm < 0:
 		current_arm = (current_arm + 1) % 3
+		while not GameManager.unlocked_arms[current_arm]:
+			current_arm = (current_arm + 1) % 3
+	else:
+		current_arm = specific_arm
 		
 	for a in 3:
 		if a == current_arm:

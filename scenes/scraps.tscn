@@ -32,7 +32,7 @@ shape = SubResource("CircleShape2D_5fgjp")
 [node name="Scraps" parent="." node_paths=PackedStringArray("ENEMY") instance=ExtResource("3_qwucx")]
 position = Vector2(0, 13.5)
 ENEMY = NodePath("..")
-DAMAGE = 20
+DAMAGE = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Scraps"]
 shape = SubResource("RectangleShape2D_ociu3")
