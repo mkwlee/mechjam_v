@@ -346,6 +346,7 @@ debug_color = Color(0.0587249, 0.649918, 0, 0.42)
 wait_time = 2.0
 
 [node name="FollowDelay" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
 
 [node name="FollowDrop" type="Timer" parent="."]

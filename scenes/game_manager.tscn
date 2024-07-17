@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cbfwi3rodq42s"]
+
+[ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_bjoqw"]
+
+[node name="GameManager" type="Node"]
+script = ExtResource("1_bjoqw")
+
+[node name="WaterDamageTimeOut" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true

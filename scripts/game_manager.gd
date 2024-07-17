@@ -7,6 +7,7 @@ var unlocked_arms = [1, 0, 0]
 var health = 100
 
 @onready var key_hole = %KeyHole
+@onready var water_damage_time_out = $WaterDamageTimeOut
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -36,3 +37,4 @@ func add_keys_to_hole():
 func death():
 	get_tree().reload_current_scene()
 	damage_or_heal(100)
+	GUI.reset_damage_heal_bar()

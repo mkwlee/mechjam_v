@@ -85,7 +85,7 @@ animations = [{
 size = Vector2(20, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t73kn"]
-size = Vector2(6, 20)
+size = Vector2(6, 19)
 
 [node name="ChargeDoor" type="StaticBody2D"]
 z_index = -1
@@ -105,7 +105,12 @@ shape = SubResource("RectangleShape2D_p8jyf")
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Button"]
-position = Vector2(13, -16)
+position = Vector2(13, -16.5)
+shape = SubResource("RectangleShape2D_t73kn")
+debug_color = Color(0.0587249, 0.649918, 0, 0.42)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Button/CollisionShape2D"]
+position = Vector2(-26, 0)
 shape = SubResource("RectangleShape2D_t73kn")
 debug_color = Color(0.0587249, 0.649918, 0, 0.42)
 

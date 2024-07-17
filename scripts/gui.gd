@@ -20,6 +20,7 @@ func _process(delta):
 	pass
 
 func player_damage(health, damage_amount):
+	damage_bar.value = health_bar.value
 	health_bar.value = max(0, health+damage_amount)
 	heal_bar.value = health_bar.value
 	damage_heal_bar.start()
@@ -34,6 +35,7 @@ func reset_damage_heal_bar():
 	if damage_bar.value > health_bar.value:
 		damage_bar.value = health_bar.value
 	elif heal_bar.value > damage_bar.value:
+		print('ahj')
 		health_bar.value = heal_bar.value
 		damage_bar.value = heal_bar.value
 
