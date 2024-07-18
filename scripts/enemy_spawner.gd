@@ -19,7 +19,7 @@ func _ready():
 	sprite.queue_free()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if not enemy_dead and enemy != null:
 		death_location_notifier.global_position = enemy.global_position
 
@@ -52,5 +52,6 @@ func spawn_enemy():
 func is_off_screen_long():
 	enemy_dead = true
 	active = true
-	enemy.queue_free()
+	if enemy != null:
+		enemy.queue_free()
 		

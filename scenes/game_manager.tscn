@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cbfwi3rodq42s"]
+[gd_scene load_steps=3 format=3 uid="uid://cbfwi3rodq42s"]
 
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_bjoqw"]
+[ext_resource type="AudioStream" uid="uid://b4i4myf3uv88u" path="res://assets/sfx/world_death.wav" id="2_tkade"]
 
 [node name="GameManager" type="Node"]
 script = ExtResource("1_bjoqw")
@@ -16,6 +17,15 @@ one_shot = true
 [node name="MeltdownTimer" type="Timer" parent="."]
 wait_time = 30.0
 one_shot = true
+
+[node name="WorldDeathSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_tkade")
+bus = &"Active SFX"
+
+[node name="AlarmSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_tkade")
+volume_db = -20.0
+bus = &"Active SFX"
 
 [connection signal="timeout" from="DeathTimeOut" to="." method="_on_death_time_out_timeout"]
 [connection signal="timeout" from="MeltdownTimer" to="." method="_on_meltdown_timer_timeout"]

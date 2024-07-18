@@ -20,7 +20,7 @@ func _process(delta):
 		queue_free()
 	sprite.rotate(PI*delta)
 
-func _on_body_entered(body):
+func _on_body_entered(_body):
 	if not hit_sfx.playing:
 		scraps.ACTIVE = false
 		sprite.hide()

@@ -11,7 +11,6 @@ extends CanvasLayer
 @onready var screen_flash_blip = $ScreenFlashBlip
 @onready var meltdown_time_label = $Control/MarginContainer/MeltdownTimeLabel
 
-
 @onready var damage_heal_bar = $DamageHealBar
 
 var time_elapsed : float = 0.0
@@ -88,8 +87,9 @@ func start_screen_flash():
 func _on_screen_flash_timeout():
 	red_flash.show()
 	screen_flash_blip.start()
-
+	
 func _on_screen_flash_blip_timeout():
 	red_flash.hide()
-	screen_flash.start()
 	meltdown_time_label.add_theme_font_size_override("font_size", meltdown_time_label.get_theme_font_size("font_size")+6)
+		
+	

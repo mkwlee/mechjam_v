@@ -12,16 +12,16 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if ACTIVE:
 		if attacking:
 			for body in get_overlapping_bodies():
 				body.take_damage(DAMAGE)
 			attacking = false
 
-func _on_body_entered(body):
+func _on_body_entered(_body):
 	attacking = true
 		
 
-func _on_body_exited(body):
+func _on_body_exited(_body):
 	attacking = false

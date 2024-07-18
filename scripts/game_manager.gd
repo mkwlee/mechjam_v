@@ -3,7 +3,7 @@ extends Node
 var keys = 0
 var keys_in_hole = 0
 var collected_keys = [0, 0, 0]
-var unlocked_arms = [1, 1, 1]
+var unlocked_arms = [1, 0, 0]
 var health = 100
 var dead = false
 
@@ -13,6 +13,10 @@ var meltdown = false
 @onready var water_damage_time_out = $WaterDamageTimeOut
 @onready var death_time_out = $DeathTimeOut
 
+@onready var world_death_sfx = $WorldDeathSFX
+@onready var alarm_sfx = $AlarmSFX
+
+
 const END_SCREEN = preload("res://scenes/end_screen.tscn")
 
 # Called when the node enters the scene tree for the first time.
@@ -21,8 +25,9 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func _process(_delta):
+	if Input.is_action_just_pressed("self_destruct"):
+		damage_or_heal(-150)
 	
 func damage_or_heal(amount):
 	if amount > 0:
@@ -56,5 +61,6 @@ func start_meltdown():
 	GUI.start_screen_flash()
 
 func _on_meltdown_timer_timeout():
+	world_death_sfx.play()
 	GUI.control.hide()
 	get_tree().change_scene_to_packed(END_SCREEN)

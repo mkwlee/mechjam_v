@@ -37,7 +37,7 @@ func _process(delta):
 	if grow:
 		sprite.scale += Vector2(delta, delta)
 	
-func _on_body_entered(body):
+func _on_body_entered(_body):
 	ball_hit.play()
 	call_deferred("set_contact_monitor", false)
 	collision_mask = 0

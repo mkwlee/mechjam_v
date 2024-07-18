@@ -169,7 +169,7 @@ func shoot_gun():
 				var time_held = floor(CHARGE_POWERUP - charge_power_up.time_left)
 				ball_sprite.scale = Vector2(0.5+0.25*time_held, 0.5+0.25*time_held)
 				ball_sprite.rotate(PI/2)
-				charge_hold_sfx.pitch_scale = time_held*0.5
+				charge_hold_sfx.pitch_scale = abs(time_held*0.5)
 			elif Input.is_action_just_released("shoot"): #Release charge
 				if ball_sprite.visible == true:
 					var time_held = floor(CHARGE_POWERUP - charge_power_up.time_left)
@@ -248,9 +248,9 @@ func player_death():
 	player_dead = true
 	chasis_sprite.hide()
 	death.play()
+	velocity = Vector2(0, 0)
 	explosion_sprite.show()
 	explosion_sprite.play()
-
 
 func _on_animated_sprite_2d_animation_finished():
 	explosion_sprite.hide()

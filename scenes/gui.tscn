@@ -90,7 +90,6 @@ color = Color(1, 0, 0, 0.215686)
 one_shot = true
 
 [node name="ScreenFlash" type="Timer" parent="."]
-one_shot = true
 
 [node name="ScreenFlashBlip" type="Timer" parent="."]
 wait_time = 0.5

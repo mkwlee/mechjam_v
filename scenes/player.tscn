@@ -296,7 +296,7 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qyyyd"]
-radius = 16.0
+radius = 13.0
 height = 58.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nlly5"]
@@ -466,7 +466,7 @@ bus = &"Active SFX"
 
 [node name="Death" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("17_otlg0")
-bus = &"Active SFX"
+bus = &"Passive SFX"
 
 [node name="ExplosionSprite" type="AnimatedSprite2D" parent="."]
 visible = false

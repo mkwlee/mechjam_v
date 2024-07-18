@@ -109,8 +109,8 @@ position = Vector2(13, -16.5)
 shape = SubResource("RectangleShape2D_t73kn")
 debug_color = Color(0.0587249, 0.649918, 0, 0.42)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Button/CollisionShape2D"]
-position = Vector2(-26, 0)
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Button"]
+position = Vector2(-13, -16.5)
 shape = SubResource("RectangleShape2D_t73kn")
 debug_color = Color(0.0587249, 0.649918, 0, 0.42)
 

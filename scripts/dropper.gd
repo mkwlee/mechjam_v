@@ -51,7 +51,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if DEAD == true:
 		linear_velocity = Vector2(0, 0)
 		chasis_sprite.hide()

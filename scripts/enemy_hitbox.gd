@@ -25,11 +25,12 @@ func _process(delta):
 				ENEMY.HEALTH = damage_and_stagger(ENEMY.HEALTH, (area.DAMAGE*delta)+(area.DAMAGE*delta / 2) * floor(burn_damage / 0.5))
 				burn_damage += delta
 				if ENEMY.HEALTH < 1:
-					ENEMY.queue_free()
+					dying = true
 				else:
 					impact_timer.start()
 		else:
 			burn_damage = 0.0
+			
 func _on_body_entered(body):
 	if ACTIVE:
 		ENEMY.HEALTH = damage_and_stagger(ENEMY.HEALTH, body.DAMAGE)
@@ -38,7 +39,6 @@ func _on_body_entered(body):
 			dying = true
 			
 		impact_timer.start()
-		#body.queue_free()
 
 func damage_and_stagger(health, damage):
 	SPRITE.modulate = Color.RED
@@ -49,7 +49,10 @@ func damage_and_stagger(health, damage):
 
 func _on_impact_timer_timeout():
 	if dying:
+		if ENEMY.DEAD == false:
+			GameManager.damage_or_heal(8)
 		ENEMY.DEAD = true
+		
 	else:
 		SPRITE.modulate = Color.WHITE
 		if STAGGER:
@@ -57,8 +60,8 @@ func _on_impact_timer_timeout():
 				ENEMY.STAGGER = false
 				ENEMY.exit_stagger()
 
-func _on_area_entered(area):
+func _on_area_entered(_area):
 	on_fire = true
 
-func _on_area_exited(area):
+func _on_area_exited(_area):
 	on_fire = false
