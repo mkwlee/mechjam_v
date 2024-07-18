@@ -1,6 +1,8 @@
 extends RigidBody2D
 
 @onready var sprite = $Sprite2D
+@onready var hit_sfx = $HitSFX
+@onready var scraps = $Scraps
 
 @export var HEALTH : int
 var DEAD = false
@@ -19,4 +21,12 @@ func _process(delta):
 	sprite.rotate(PI*delta)
 
 func _on_body_entered(body):
+	if not hit_sfx.playing:
+		scraps.ACTIVE = false
+		sprite.hide()
+		hit_sfx.play()
+	
+
+
+func _on_hit_sfx_finished():
 	queue_free()

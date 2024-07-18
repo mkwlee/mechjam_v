@@ -1,9 +1,9 @@
 extends CharacterBody2D
 
 #Node References
-@onready var back_leg_sprite : AnimatedSprite2D = $BackLegSprite
+@onready var back_leg_sprite : AnimatedSprite2D = $ChasisSprite/BackLegSprite
 @onready var chasis_sprite : AnimatedSprite2D = $ChasisSprite
-@onready var front_leg_sprite : AnimatedSprite2D = $FrontLegSprite
+@onready var front_leg_sprite : AnimatedSprite2D = $ChasisSprite/FrontLegSprite
 
 @onready var gun_sprite : AnimatedSprite2D = $ChasisSprite/GunSprite
 @onready var gun_tip : Marker2D = $ChasisSprite/GunSprite/GunTip
@@ -20,6 +20,7 @@ extends CharacterBody2D
 @onready var fire_ray_cast : RayCast2D = $ChasisSprite/ThrowerSprite/FireRayCast
 @onready var fire_detection : Area2D = $ChasisSprite/ThrowerSprite/Fire
 
+@onready var explosion_sprite = $ExplosionSprite
 
 @onready var arms = [[gun_sprite, gun_tip], [charge_sprite, charge_tip], [thrower_sprite, thrower_tip]]
 
@@ -36,6 +37,17 @@ const BALL : PackedScene = preload("res://scenes/ball.tscn")
 @onready var damage_immunity : Timer = $Timers/DamageImmunity
 
 
+#SFX
+@onready var gun_shoot_sfx = $GunShoot
+@onready var charge_hold_sfx = $ChargeHold
+@onready var fire_shoot_sfx = $FireShoot
+@onready var jump_sfx = $Jump
+@onready var hurt_sfx = $Hurt
+@onready var charge_shoot = $ChargeShoot
+@onready var death = $Death
+
+
+
 @export var GUN_COOLDOWN : float
 @export var CHARGE_POWERUP : float
 @export var DAMAGE_IMMUNITY : float
@@ -45,7 +57,7 @@ const BALL : PackedScene = preload("res://scenes/ball.tscn")
 
 var current_arm : int = 0
 var current_direction : int = 1
-
+var player_dead = false
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
@@ -53,21 +65,24 @@ func _ready():
 	set_timers()
 	
 func _physics_process(delta):
+	if GameManager.dead and not player_dead:
+		player_death()
+	
+	
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_floor() and not player_dead:
 		velocity.y += gravity * delta
 
-	
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction = Input.get_axis("left", "right")
 	
 		
-	if direction != 0:
+	if direction != 0 and not player_dead:
 		
 		if current_direction != direction:
 			current_direction = direction
-			scale.x *= -1
+			chasis_sprite.scale.x *= -1
 		
 		velocity.x = direction * SPEED
 		if is_on_floor():
@@ -80,17 +95,19 @@ func _physics_process(delta):
 			front_leg_sprite.play("idle")
 		
 	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if Input.is_action_just_pressed("jump") and is_on_floor() and not player_dead:
 		velocity.y = -JUMP
+		jump_sfx.play()
 		back_leg_sprite.play("jump")
 		front_leg_sprite.play("jump")
 
 	move_and_slide()
 	rotate_arm_up()
-	shoot_gun()
+	if not player_dead:
+		shoot_gun()
 	#
 		
-	if Input.is_action_just_pressed("switch_arm"):
+	if Input.is_action_just_pressed("switch_arm") and not player_dead:
 		switch_arm(-1)
 
 func flipped_player(state):
@@ -131,10 +148,11 @@ func shoot_gun():
 				if Input.is_action_pressed("shoot"):
 					var b = BULLET.instantiate()
 					b.rotation = gun_tip.global_rotation
-					b.direction = scale.x
+					b.direction = current_direction
 					b.position = gun_tip.global_position
 					get_tree().current_scene.add_child(b)
 					gun_sprite.play("shoot")
+					gun_shoot_sfx.play()
 					gun_cool_down.start()
 			pass
 		1: #Charge
@@ -142,25 +160,32 @@ func shoot_gun():
 				ball_sprite.position = charge_tip.position
 				ball_sprite.scale = Vector2(0.5, 0.5)
 				ball_sprite.show()
+				charge_hold_sfx.pitch_scale = 0.5
+				charge_shoot.pitch_scale = 0.5
+				charge_hold_sfx.play()
 				charge_power_up.start()
 			elif Input.is_action_pressed("shoot"): #During charge
 				ball_sprite.position = charge_tip.position
 				var time_held = floor(CHARGE_POWERUP - charge_power_up.time_left)
 				ball_sprite.scale = Vector2(0.5+0.25*time_held, 0.5+0.25*time_held)
 				ball_sprite.rotate(PI/2)
+				charge_hold_sfx.pitch_scale = time_held*0.5
 			elif Input.is_action_just_released("shoot"): #Release charge
 				if ball_sprite.visible == true:
 					var time_held = floor(CHARGE_POWERUP - charge_power_up.time_left)
 					var b = BALL.instantiate()
 					b.rotation = charge_tip.global_rotation
-					b.direction = scale.x
+					b.direction = current_direction
 					b.position = charge_tip.global_position
 					b.damage_multiplier = pow(10, time_held)
 					b.speed_multiplier = time_held+1
 					b.size = Vector2(0.5+0.25*time_held, 0.5+0.25*time_held)
 					ball_sprite.hide()
-					get_tree().current_scene.add_child(b)
 					charge_sprite.play("shoot")
+					charge_hold_sfx.stop()
+					charge_shoot.pitch_scale = time_held*0.5
+					charge_shoot.play()
+					get_tree().current_scene.add_child(b)
 			pass
 		2: #Thrower
 			if Input.is_action_pressed("shoot"):
@@ -176,12 +201,15 @@ func shoot_gun():
 				
 				fire_sprite.show()
 				fire_sprite.play("fire")
+				if not fire_shoot_sfx.playing:
+					fire_shoot_sfx.play()
 			else:
 				fire_detection.collision_shape.disabled = true
 				fire_ray_cast.enabled = false
 				fire_sprite.scale.x = 1
 				fire_detection.scale.x = 1
 				fire_sprite.hide()
+				fire_shoot_sfx.stop()
 
 func set_timers():
 	gun_cool_down.wait_time = GUN_COOLDOWN
@@ -209,8 +237,20 @@ func switch_arm(specific_arm):
 func take_damage(damage_ammount):
 	if damage_immunity.is_stopped():
 		GameManager.damage_or_heal(-damage_ammount)
+		hurt_sfx.play()
 		modulate = Color.RED
 		damage_immunity.start()
 		
 func _on_damage_immunity_timeout():
 	modulate = Color.WHITE
+	
+func player_death():
+	player_dead = true
+	chasis_sprite.hide()
+	death.play()
+	explosion_sprite.show()
+	explosion_sprite.play()
+
+
+func _on_animated_sprite_2d_animation_finished():
+	explosion_sprite.hide()

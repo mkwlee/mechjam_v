@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cx13sky8kswwi"]
+[gd_scene load_steps=31 format=3 uid="uid://cx13sky8kswwi"]
 
 [ext_resource type="Script" path="res://scripts/charger.gd" id="1_eeha0"]
 [ext_resource type="Texture2D" uid="uid://cob8u6kp3epyp" path="res://assets/sprites/charger/charger_chasis.png" id="1_n7ts8"]
@@ -6,6 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://du3hkekb04dtl" path="res://assets/sprites/charger/charger_spike.png" id="3_ah51i"]
 [ext_resource type="PackedScene" uid="uid://c143x75y0fkh2" path="res://scenes/enemy_hitbox.tscn" id="5_pv5kt"]
 [ext_resource type="PackedScene" uid="uid://c6fcqep6ex77e" path="res://scenes/enemy_hurtbox.tscn" id="6_ahq4i"]
+[ext_resource type="AudioStream" uid="uid://6wiapv6p8mp3" path="res://assets/sfx/charger/charger_prepare.wav" id="7_vjaht"]
+[ext_resource type="AudioStream" uid="uid://co7i6gn6taqe6" path="res://assets/sfx/charger/charger_charge.wav" id="8_axgmg"]
+[ext_resource type="AudioStream" uid="uid://d10kg67pi1y2u" path="res://assets/sfx/charger/charger_cooldown.wav" id="9_1vfgy"]
+[ext_resource type="AudioStream" uid="uid://b00dimeieyb4u" path="res://assets/sfx/charger/charger_hit.wav" id="10_dpnrd"]
+[ext_resource type="AudioStream" uid="uid://du77goeya3g02" path="res://assets/sfx/enemy_death.wav" id="11_dusaj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ecxtn"]
 atlas = ExtResource("1_n7ts8")
@@ -168,7 +173,7 @@ autoplay = "default"
 
 [node name="MovementStopRay" type="RayCast2D" parent="ChasisSprite"]
 position = Vector2(0, 13)
-target_position = Vector2(31, 0)
+target_position = Vector2(18, 0)
 
 [node name="EnemyDetectionRay" type="RayCast2D" parent="ChasisSprite"]
 target_position = Vector2(256, 0)
@@ -206,5 +211,27 @@ one_shot = true
 [node name="CoolDown" type="Timer" parent="."]
 one_shot = true
 
+[node name="PrepareSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_vjaht")
+bus = &"Enemy SFX"
+
+[node name="ChargeSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_axgmg")
+volume_db = -15.0
+bus = &"Enemy SFX"
+
+[node name="CoolDownSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_1vfgy")
+bus = &"Enemy SFX"
+
+[node name="WallHitSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_dpnrd")
+bus = &"Enemy SFX"
+
+[node name="DeathSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_dusaj")
+bus = &"Enemy SFX"
+
 [connection signal="timeout" from="ChargeDelay" to="." method="enter_charging"]
 [connection signal="timeout" from="CoolDown" to="." method="enter_wander"]
+[connection signal="finished" from="DeathSFX" to="." method="_on_death_sfx_finished"]

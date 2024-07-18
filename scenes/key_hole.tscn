@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://csf5o0b0fadxr"]
+[gd_scene load_steps=7 format=3 uid="uid://csf5o0b0fadxr"]
 
 [ext_resource type="Texture2D" uid="uid://4k5k8w8b56nn" path="res://assets/sprites/key_hole.png" id="1_0qo1h"]
 [ext_resource type="Script" path="res://scripts/key_hole.gd" id="1_y5lgu"]
 [ext_resource type="Texture2D" uid="uid://xgdr885besee" path="res://assets/sprites/key.png" id="2_w6i1v"]
+[ext_resource type="AudioStream" uid="uid://ciu8nfx17jpws" path="res://assets/sfx/key_holder_update.wav" id="4_88vw5"]
+[ext_resource type="AudioStream" uid="uid://d1gl5w03erwhp" path="res://assets/sfx/key_holder_passive.wav" id="5_37ebp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4f42q"]
 size = Vector2(96, 35)
@@ -40,5 +42,14 @@ texture = ExtResource("2_w6i1v")
 visible = false
 position = Vector2(0, -1.5)
 shape = SubResource("RectangleShape2D_4f42q")
+
+[node name="KeyInsertSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_88vw5")
+bus = &"Active SFX"
+
+[node name="KeyPassiveSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_37ebp")
+pitch_scale = 0.25
+bus = &"Passive SFX"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

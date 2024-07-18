@@ -1,0 +1,170 @@
+[gd_scene load_steps=4 format=3 uid="uid://kjtnim73m0x4"]
+
+[ext_resource type="FontFile" uid="uid://2ulxywuurtgi" path="res://assets/fonts/TeenyTinyPixls-o2zo.ttf" id="1_l5d1e"]
+[ext_resource type="Script" path="res://scripts/end_screen.gd" id="1_um7hb"]
+[ext_resource type="Texture2D" uid="uid://cm6abdwapc33k" path="res://assets/sprites/grave_stone.png" id="3_8xo6r"]
+
+[node name="EndScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_um7hb")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="LooseLabel" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.5
+offset_top = -11.5
+offset_right = 140.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_fonts/font = ExtResource("1_l5d1e")
+text = "Desertion! How dare you!
+Get back in there!"
+horizontal_alignment = 1
+
+[node name="LooseTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="Win" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Win"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -151.5
+offset_top = -306.0
+offset_right = 151.5
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("3_8xo6r")
+
+[node name="CommandText" type="Label" parent="Win"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -212.0
+offset_top = 42.0
+offset_right = 212.0
+offset_bottom = 177.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_fonts/font = ExtResource("1_l5d1e")
+text = "Great job soldier! Your sacrifice has contributed  immensely to the effort! It was an honor serving with you, [INSERT SOLDIER'S NAME HERE LATER]"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="GraveTextTop" type="Label" parent="Win"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -95.0
+offset_top = -100.0
+offset_right = 95.0
+offset_bottom = 79.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_l5d1e")
+theme_override_font_sizes/font_size = 32
+text = "RIP"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="GraveTextMiddle" type="Label" parent="Win"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -95.0
+offset_top = 7.0
+offset_right = 95.0
+offset_bottom = 62.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_l5d1e")
+theme_override_font_sizes/font_size = 14
+text = "Solider #999999999"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="GraveTextBottom" type="Label" parent="Win"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -95.0
+offset_top = 41.0
+offset_right = 95.0
+offset_bottom = 138.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_l5d1e")
+theme_override_font_sizes/font_size = 10
+text = "Served honorably in battle for a total of
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="GraveTextTime" type="Label" parent="Win"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -95.0
+offset_top = 91.0
+offset_right = 95.0
+offset_bottom = 188.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_l5d1e")
+theme_override_font_sizes/font_size = 18
+text = "00:00:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[connection signal="timeout" from="LooseTimer" to="." method="_on_loose_timer_timeout"]

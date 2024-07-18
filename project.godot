@@ -79,6 +79,10 @@ switch_arm={
 2d_physics/layer_5="Enemy Projectiles"
 2d_physics/layer_6="Pickups"
 
+[physics]
+
+common/physics_jitter_fix=0.0
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

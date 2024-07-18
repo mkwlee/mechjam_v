@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://c5qkdiy5hu50j"]
+[gd_scene load_steps=5 format=3 uid="uid://c5qkdiy5hu50j"]
 
 [ext_resource type="Texture2D" uid="uid://nv2uhtlg8tg2" path="res://assets/sprites/ball.png" id="1_bpqvo"]
 [ext_resource type="Script" path="res://scripts/ball.gd" id="1_pxmje"]
+[ext_resource type="AudioStream" uid="uid://dbnu312uqoouo" path="res://assets/sfx/ball_hit.wav" id="3_3ad6k"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l755k"]
 radius = 4.0
@@ -22,8 +23,9 @@ texture = ExtResource("1_bpqvo")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_l755k")
 
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
-scale = Vector2(0.5, 0.5)
+[node name="BallHit" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_3ad6k")
+bus = &"Passive SFX"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
-[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
+[connection signal="finished" from="BallHit" to="." method="_on_ball_hit_finished"]

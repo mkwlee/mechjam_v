@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cvnaolv7ghm8h"]
+[gd_scene load_steps=5 format=3 uid="uid://cvnaolv7ghm8h"]
 
 [ext_resource type="Script" path="res://scripts/arm_pickup.gd" id="1_ik473"]
 [ext_resource type="Texture2D" uid="uid://b6tg43g6o2fao" path="res://assets/sprites/thrower_pickup.png" id="1_jry5t"]
+[ext_resource type="AudioStream" uid="uid://dvfus4ixtvqnj" path="res://assets/sfx/arm_pick_up.wav" id="3_5yyat"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lunvn"]
 size = Vector2(9, 26)
@@ -21,4 +22,9 @@ offset = Vector2(0, -0.5)
 position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_lunvn")
 
+[node name="ArmPickupSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_5yyat")
+bus = &"Active SFX"
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="finished" from="ArmPickupSFX" to="." method="_on_arm_pickup_sfx_finished"]

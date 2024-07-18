@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://6lu8fikb4kl2"]
+[gd_scene load_steps=59 format=3 uid="uid://6lu8fikb4kl2"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_nlx6r"]
 [ext_resource type="Texture2D" uid="uid://dl2plghi0koa5" path="res://assets/sprites/chasis.png" id="1_t5hw6"]
@@ -10,69 +10,14 @@
 [ext_resource type="Texture2D" uid="uid://beo2h0pjlaskx" path="res://assets/sprites/thrower.png" id="7_3eqou"]
 [ext_resource type="Texture2D" uid="uid://b7ust0b4spb51" path="res://assets/sprites/fire.png" id="8_dcrug"]
 [ext_resource type="PackedScene" uid="uid://rfbyft7n22d3" path="res://scenes/fire.tscn" id="10_mtk4m"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jqfqe"]
-atlas = ExtResource("3_rw7xu")
-region = Rect2(64, 0, 32, 36)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d40c4"]
-atlas = ExtResource("3_rw7xu")
-region = Rect2(64, 0, 32, 36)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_x1vie"]
-atlas = ExtResource("3_rw7xu")
-region = Rect2(96, 0, 32, 36)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dxh4v"]
-atlas = ExtResource("3_rw7xu")
-region = Rect2(96, 0, 32, 36)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_r4w0t"]
-atlas = ExtResource("3_rw7xu")
-region = Rect2(0, 0, 32, 36)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_n7rf8"]
-atlas = ExtResource("3_rw7xu")
-region = Rect2(32, 0, 32, 36)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_omj2c"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jqfqe")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d40c4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_x1vie")
-}],
-"loop": false,
-"name": &"jump",
-"speed": 12.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jqfqe")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dxh4v")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_r4w0t")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_n7rf8")
-}],
-"loop": true,
-"name": &"walk",
-"speed": 8.0
-}]
+[ext_resource type="AudioStream" uid="uid://bb7m04cracma" path="res://assets/sfx/gun_shoot.wav" id="11_m63rq"]
+[ext_resource type="AudioStream" uid="uid://qfvjijkuhkog" path="res://assets/sfx/charge_hold.wav" id="12_m63hb"]
+[ext_resource type="AudioStream" uid="uid://d8d800l2ijr5" path="res://assets/sfx/thrower_shot.wav" id="13_dh5nx"]
+[ext_resource type="AudioStream" uid="uid://dv8an3bpomajv" path="res://assets/sfx/charge_shoot.wav" id="13_o5dh0"]
+[ext_resource type="AudioStream" uid="uid://bfkg8o3d8k08p" path="res://assets/sfx/jump.wav" id="15_i4kvs"]
+[ext_resource type="AudioStream" uid="uid://b4vneu7fimpcv" path="res://assets/sfx/hurt.wav" id="15_k0j6r"]
+[ext_resource type="AudioStream" uid="uid://c14ptinuupaol" path="res://assets/sfx/player_death.wav" id="17_otlg0"]
+[ext_resource type="Texture2D" uid="uid://dq8hh8psu42vh" path="res://assets/sprites/explosion.png" id="18_s1df1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kq3ua"]
 atlas = ExtResource("3_ky8tx")
@@ -220,6 +165,69 @@ animations = [{
 "speed": 9.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_jqfqe"]
+atlas = ExtResource("3_rw7xu")
+region = Rect2(64, 0, 32, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d40c4"]
+atlas = ExtResource("3_rw7xu")
+region = Rect2(64, 0, 32, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x1vie"]
+atlas = ExtResource("3_rw7xu")
+region = Rect2(96, 0, 32, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dxh4v"]
+atlas = ExtResource("3_rw7xu")
+region = Rect2(96, 0, 32, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r4w0t"]
+atlas = ExtResource("3_rw7xu")
+region = Rect2(0, 0, 32, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n7rf8"]
+atlas = ExtResource("3_rw7xu")
+region = Rect2(32, 0, 32, 36)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_omj2c"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jqfqe")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d40c4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x1vie")
+}],
+"loop": false,
+"name": &"jump",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jqfqe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dxh4v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r4w0t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n7rf8")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}]
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_djvpe"]
 atlas = ExtResource("3_rw7xu")
 region = Rect2(32, 0, 32, 36)
@@ -291,6 +299,42 @@ animations = [{
 radius = 16.0
 height = 58.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_nlly5"]
+atlas = ExtResource("18_s1df1")
+region = Rect2(0, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hcivd"]
+atlas = ExtResource("18_s1df1")
+region = Rect2(96, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4w467"]
+atlas = ExtResource("18_s1df1")
+region = Rect2(192, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xfqxb"]
+atlas = ExtResource("18_s1df1")
+region = Rect2(288, 0, 96, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n8w0b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nlly5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hcivd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4w467")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xfqxb")
+}],
+"loop": false,
+"name": &"default",
+"speed": 12.0
+}]
+
 [node name="Player" type="CharacterBody2D"]
 z_index = 3
 collision_layer = 2
@@ -301,13 +345,6 @@ JUMP = 400
 GUN_COOLDOWN = 0.2
 CHARGE_POWERUP = 2.0
 DAMAGE_IMMUNITY = 0.1
-
-[node name="BackLegSprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(-4.5, 10.5)
-sprite_frames = SubResource("SpriteFrames_omj2c")
-animation = &"jump"
-autoplay = "idle"
-offset = Vector2(3.5, 14.5)
 
 [node name="ChasisSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_yje5t")
@@ -369,7 +406,14 @@ hit_from_inside = true
 [node name="Fire" parent="ChasisSprite/ThrowerSprite" instance=ExtResource("10_mtk4m")]
 position = Vector2(26.5, 7)
 
-[node name="FrontLegSprite" type="AnimatedSprite2D" parent="."]
+[node name="BackLegSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
+position = Vector2(-4.5, 10.5)
+sprite_frames = SubResource("SpriteFrames_omj2c")
+animation = &"jump"
+autoplay = "idle"
+offset = Vector2(3.5, 14.5)
+
+[node name="FrontLegSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
 position = Vector2(-4.5, 10.5)
 sprite_frames = SubResource("SpriteFrames_12m68")
 animation = &"jump"
@@ -391,4 +435,44 @@ one_shot = true
 [node name="DamageImmunity" type="Timer" parent="Timers"]
 one_shot = true
 
+[node name="AudioListener2D" type="AudioListener2D" parent="."]
+current = true
+
+[node name="GunShoot" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_m63rq")
+volume_db = 5.0
+bus = &"Active SFX"
+
+[node name="ChargeHold" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_m63hb")
+pitch_scale = 0.5
+bus = &"Passive SFX"
+
+[node name="ChargeShoot" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("13_o5dh0")
+bus = &"Active SFX"
+
+[node name="FireShoot" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("13_dh5nx")
+bus = &"Active SFX"
+
+[node name="Jump" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("15_i4kvs")
+bus = &"Passive SFX"
+
+[node name="Hurt" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("15_k0j6r")
+bus = &"Active SFX"
+
+[node name="Death" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("17_otlg0")
+bus = &"Active SFX"
+
+[node name="ExplosionSprite" type="AnimatedSprite2D" parent="."]
+visible = false
+sprite_frames = SubResource("SpriteFrames_n8w0b")
+frame = 3
+frame_progress = 1.0
+
 [connection signal="timeout" from="Timers/DamageImmunity" to="." method="_on_damage_immunity_timeout"]
+[connection signal="animation_finished" from="ExplosionSprite" to="." method="_on_animated_sprite_2d_animation_finished"]

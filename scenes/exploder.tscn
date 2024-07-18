@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cy8dq4s8turyf"]
+[gd_scene load_steps=21 format=3 uid="uid://cy8dq4s8turyf"]
 
 [ext_resource type="Script" path="res://scripts/exploder.gd" id="1_87a8b"]
 [ext_resource type="Texture2D" uid="uid://cban4cp8heerp" path="res://assets/sprites/exploder/exploder_chasis.png" id="1_geaho"]
@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://b1plcs35vpcm1" path="res://assets/sprites/exploder/exploder_fire.png" id="3_nm0c5"]
 [ext_resource type="Texture2D" uid="uid://be2d3cmefxa72" path="res://assets/sprites/exploder/exploder_explosion.png" id="4_sqwdr"]
 [ext_resource type="PackedScene" uid="uid://c6fcqep6ex77e" path="res://scenes/enemy_hurtbox.tscn" id="6_j0mhk"]
+[ext_resource type="AudioStream" uid="uid://b2inkavcvwkxg" path="res://assets/sfx/exploder/exploder_follow.wav" id="7_6c4hi"]
+[ext_resource type="AudioStream" uid="uid://bpjs6n1o5ckcp" path="res://assets/sfx/exploder/exploder_explode.wav" id="8_p5d44"]
+[ext_resource type="AudioStream" uid="uid://du77goeya3g02" path="res://assets/sfx/enemy_death.wav" id="9_vpso1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4jatr"]
 atlas = ExtResource("1_geaho")
@@ -94,7 +97,6 @@ sprite_frames = SubResource("SpriteFrames_j7rhe")
 autoplay = "default"
 
 [node name="FireSprite" type="AnimatedSprite2D" parent="ChasisSprite"]
-visible = false
 position = Vector2(-16, 0)
 sprite_frames = SubResource("SpriteFrames_18naa")
 autoplay = "default"
@@ -154,15 +156,34 @@ wait_time = 0.05
 [node name="NoEnemyDetectIdleDelay" type="Timer" parent="."]
 one_shot = true
 
-[node name="Enemy Hurtbox" parent="." node_paths=PackedStringArray("ENEMY") instance=ExtResource("6_j0mhk")]
+[node name="FlashInterval" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="ExplodeHurtbox" parent="." node_paths=PackedStringArray("ENEMY") instance=ExtResource("6_j0mhk")]
+visible = false
 ENEMY = NodePath("..")
-DAMAGE = 30
+DAMAGE = 20
 ACTIVE = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy Hurtbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExplodeHurtbox"]
 shape = SubResource("RectangleShape2D_o885w")
 debug_color = Color(1, 0.0144794, 0.00058604, 0.42)
+
+[node name="FollowSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_6c4hi")
+volume_db = -25.0
+bus = &"Enemy SFX"
+
+[node name="ExplodeSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_p5d44")
+bus = &"Enemy SFX"
+
+[node name="DeathSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_vpso1")
+bus = &"Enemy SFX"
 
 [connection signal="timeout" from="ChaseDelay" to="." method="enter_chasing"]
 [connection signal="timeout" from="ExplosionSpread" to="." method="animated_explosion"]
 [connection signal="timeout" from="NoEnemyDetectIdleDelay" to="." method="enter_idle"]
+[connection signal="timeout" from="FlashInterval" to="." method="exploding_flash"]
+[connection signal="finished" from="DeathSFX" to="." method="_on_death_sfx_finished"]

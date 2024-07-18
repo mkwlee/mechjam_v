@@ -8,3 +8,14 @@ script = ExtResource("1_bjoqw")
 [node name="WaterDamageTimeOut" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
+
+[node name="DeathTimeOut" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="MeltdownTimer" type="Timer" parent="."]
+wait_time = 30.0
+one_shot = true
+
+[connection signal="timeout" from="DeathTimeOut" to="." method="_on_death_time_out_timeout"]
+[connection signal="timeout" from="MeltdownTimer" to="." method="_on_meltdown_timer_timeout"]

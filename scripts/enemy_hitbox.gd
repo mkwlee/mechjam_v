@@ -10,6 +10,7 @@ extends Area2D
 
 var on_fire = false
 var dying = false
+var burn_damage = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,12 +22,14 @@ func _process(delta):
 	if ACTIVE:
 		if on_fire == true:
 			for area in get_overlapping_areas():
-				ENEMY.HEALTH = damage_and_stagger(ENEMY.HEALTH, area.DAMAGE*delta)
+				ENEMY.HEALTH = damage_and_stagger(ENEMY.HEALTH, (area.DAMAGE*delta)+(area.DAMAGE*delta / 2) * floor(burn_damage / 0.5))
+				burn_damage += delta
 				if ENEMY.HEALTH < 1:
 					ENEMY.queue_free()
 				else:
 					impact_timer.start()
-			
+		else:
+			burn_damage = 0.0
 func _on_body_entered(body):
 	if ACTIVE:
 		ENEMY.HEALTH = damage_and_stagger(ENEMY.HEALTH, body.DAMAGE)

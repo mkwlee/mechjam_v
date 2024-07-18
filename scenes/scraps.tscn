@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://q05kdyu1aksp"]
+[gd_scene load_steps=9 format=3 uid="uid://q05kdyu1aksp"]
 
 [ext_resource type="Script" path="res://scripts/dropper_projectile.gd" id="1_g2ov6"]
 [ext_resource type="Texture2D" uid="uid://dxa5yvw2cva3u" path="res://assets/sprites/dropper/dropper_projectile.png" id="2_quvwe"]
 [ext_resource type="PackedScene" uid="uid://c6fcqep6ex77e" path="res://scenes/enemy_hurtbox.tscn" id="3_qwucx"]
 [ext_resource type="PackedScene" uid="uid://c143x75y0fkh2" path="res://scenes/enemy_hitbox.tscn" id="4_hoj3m"]
+[ext_resource type="AudioStream" uid="uid://dygve10dnf3pw" path="res://assets/sfx/dropper/scrap_hit.wav" id="5_cu4qm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5fgjp"]
 radius = 12.0
@@ -48,4 +49,10 @@ STAGGER = false
 shape = SubResource("RectangleShape2D_tv7sx")
 debug_color = Color(0.0587249, 0.649918, 0, 0.42)
 
+[node name="HitSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_cu4qm")
+volume_db = -10.0
+bus = &"Enemy SFX"
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="finished" from="HitSFX" to="." method="_on_hit_sfx_finished"]

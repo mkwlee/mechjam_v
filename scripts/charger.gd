@@ -13,6 +13,12 @@ extends RigidBody2D
 
 @onready var spike = $ChasisSprite/Spike
 
+@onready var prepare_sfx = $PrepareSFX
+@onready var charge_sfx = $ChargeSFX
+@onready var cool_down_sfx = $CoolDownSFX
+@onready var wall_hit_sfx = $WallHitSFX
+@onready var death_sfx = $DeathSFX
+
 
 @export var SPEED : int
 @export var HEALTH : int
@@ -45,8 +51,11 @@ func _ready():
 func _process(delta):
 	
 	if DEAD == true:
-		SPAWNER.enemy_dead = true
-		queue_free()
+		linear_velocity = Vector2(0, 0)
+		spike.ACTIVE = false
+		chasis_sprite.hide()
+		if not death_sfx.playing:
+			death_sfx.play()
 	
 	if not STAGGER:
 		match state:
@@ -63,12 +72,9 @@ func _process(delta):
 			actions.PREPARING:
 				position.y = move_toward(position.y, air, (16 / charge_delay.wait_time)*delta)
 				
-			actions.CHARGING:
-				#if direction == 1 and position.x > target_location.x or direction == -1 and position.x < target_location.x:
-					#fire_sprite.play("default")
-					#linear_velocity.x = move_toward(linear_velocity.x, 0, (SPEED*2)*delta)
-					
+			actions.CHARGING:	
 				if linear_velocity.x == 0 or movement_stop_ray.is_colliding():
+					wall_hit_sfx.play()
 					enter_cooldown()
 					cool_down.start()
 					
@@ -93,7 +99,8 @@ func enter_wander():
 	state = actions.WANDER
 
 func enter_preparing():
-	#target_location = enemy_detection_ray.get_collision_point()
+	if not prepare_sfx.playing:
+		prepare_sfx.play()
 	linear_velocity.x = 0
 	chasis_sprite.play("attack")
 	fire_sprite.hide()
@@ -101,6 +108,8 @@ func enter_preparing():
 	state = actions.PREPARING
 
 func enter_charging():
+	if not charge_sfx.playing:
+		charge_sfx.play()
 	linear_velocity.x = direction * SPEED * 2
 	spike.ACTIVE = true
 	fire_sprite.play("charging")
@@ -108,6 +117,9 @@ func enter_charging():
 	state = actions.CHARGING
 
 func enter_cooldown():
+	charge_sfx.stop()
+	if not cool_down_sfx.playing:
+		cool_down_sfx.play()
 	fire_sprite.hide()
 	spike_sprite.play_backwards("default")
 	state = actions.COOLDOWN
@@ -130,3 +142,7 @@ func exit_stagger():
 			pass
 	
 			
+
+func _on_death_sfx_finished():
+	SPAWNER.enemy_dead = true
+	queue_free()

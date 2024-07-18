@@ -25,6 +25,12 @@ var SPAWNER
 @onready var follow_drop = $FollowDrop
 @onready var cool_down = $CoolDown
 
+@onready var prepare_sfx = $PrepareSFX
+@onready var drop_sfx = $DropSFX
+@onready var wall_hit_sfx = $WallHitSFX
+@onready var death_sfx = $DeathSFX
+
+
 #Scene Const
 const SCRAPS = preload("res://scenes/scraps.tscn")
 
@@ -47,8 +53,10 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if DEAD == true:
-		SPAWNER.enemy_dead = true
-		queue_free()
+		linear_velocity = Vector2(0, 0)
+		chasis_sprite.hide()
+		if not death_sfx.playing:
+			death_sfx.play()
 	
 	if not STAGGER:
 		match state:
@@ -76,6 +84,7 @@ func _process(delta):
 					#linear_velocity.x = move_toward(linear_velocity.x, 0, (SPEED*2)*delta)
 					
 				if  linear_velocity.x == 0 or movement_stop_ray.is_colliding():
+					wall_hit_sfx.play()
 					enter_cooldown()
 					cool_down.start()
 				pass
@@ -110,6 +119,8 @@ func enter_wander():
 	state = actions.WANDER
 
 func enter_preparing():
+	if not prepare_sfx.playing:
+		prepare_sfx.play()
 	wander_drop.stop()
 	linear_velocity.x = 0
 	mouth_sprite.play("default")
@@ -147,6 +158,7 @@ func open_mouth():
 	mouth_sprite.play("default")
 
 func drop_projectile():
+	drop_sfx.play()
 	var s = SCRAPS.instantiate()
 	s.global_position = drop_point.global_position
 	get_parent().add_child(s)
@@ -169,3 +181,8 @@ func exit_stagger():
 			enter_cooldown()
 			cool_down.paused = false
 			pass
+
+
+func _on_death_sfx_finished():
+	SPAWNER.enemy_dead = true
+	queue_free()
